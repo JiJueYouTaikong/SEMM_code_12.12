@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <title>OD地图可视化集成</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+    #map-container {
+      width: 100%;
+      height: 100vh;
+    }
+    iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+    #controls {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      z-index: 9999;
+      background: rgba(255, 255, 255, 0.9);
+      padding: 10px;
+      border-radius: 5px;
+    }
+  </style>
+</head>
+<body>
+
+<div id="controls">
+  <label for="map-select">选择地图：</label>
+  <select id="map-select">
+    <option value="真实值_departure_map.html">真实值 - 总出发量</option>
+    <option value="真实值_arrival_map.html">真实值 - 总到达量</option>
+    <option value="Pred_ANN_departure_map.html">Pred_ANN - 总出发量</option>
+    <option value="Pred_ANN_arrival_map.html">Pred_ANN - 总到达量</option>
+    <option value="Pred_ours_departure_map.html">Pred_ours - 总出发量</option>
+    <option value="Pred_ours_arrival_map.html">Pred_ours - 总到达量</option>
+  </select>
+</div>
+
+<div id="map-container">
+  <iframe id="map-frame" src="真实值_departure_map.html"></iframe>
+</div>
+
+<script>
+  const select = document.getElementById('map-select');
+  const iframe = document.getElementById('map-frame');
+
+  select.addEventListener('change', function () {
+    iframe.src = this.value;
+  });
+</script>
+
+</body>
+</html>
