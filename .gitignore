@@ -10,7 +10,7 @@ data/
 *.pt
 *.npz
 *.npy
-
+*.pkl
 # 忽略结果输出
 outputs/
 logs/
