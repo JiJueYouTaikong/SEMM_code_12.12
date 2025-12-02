@@ -1,3 +1,4 @@
+
 data/OD_完整批处理_3.17_Final_MCM_180_43.npy
 data/OD_完整批处理_3.17_Final_MCM_60.npy
 data/t_bd_od.csv
@@ -6,8 +7,7 @@ data/仿真_真实_总OD矩阵_V1.1_25.2.26.npy
 data/仿真_真实_总OD矩阵_V1.2_25.2.26.npy
 data/仿真_真实_总OD矩阵_V1.3_60days.npy
 OVS/data/仿真_真实_总OD矩阵_V1.3_60days.npy
-
-*.log
-*.pth
-*.pt
-*.txt
+STLLM_GPT2/data/OD_完整批处理_3.17_Final_MCM_60.npy
+STLLM_GPT2/logs/2025-06-29-08:54:22-Speed/best_model.pth
+STLLM_GPT2/logs/DS-Best-MCM/best_model.pth
+STLLM_GPT2/logs/GPT2-Best-MCM/best_model.pth
