@@ -1,0 +1,4 @@
+Lr = 0.03,patience = 30,Test Loss: 38.2204 RMSE: 6.0222 MAE: 1.2285 MAPE: 0.9271
+Lr = 0.03,patience = 20,Test Loss: 37.3501 RMSE: 5.9569 MAE: 1.2161 MAPE: 0.9217
+Lr = 0.03,patience = 20,Test Loss: 37.3501 RMSE: 5.9569 MAE: 1.2161 MAPE: 0.9217
+Lr = 0.03,patience = 20,Test Loss: 37.3501 RMSE: 5.9569 MAE: 1.2161 MAPE: 0.9217

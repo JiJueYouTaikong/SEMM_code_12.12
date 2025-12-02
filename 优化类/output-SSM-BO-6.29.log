@@ -1,0 +1,148 @@
+nohup: ignoring input
+6.20.2
+
+Processing sample 1/35
+Sample 0 - Best Loss: 386.5638
+RMSE: 7.2755, MAE: 1.1331, MAPE: 0.8976
+
+Processing sample 2/35
+Sample 1 - Best Loss: 444.4688
+RMSE: 7.8974, MAE: 1.1642, MAPE: 0.8938
+
+Processing sample 3/35
+Sample 2 - Best Loss: 421.8710
+RMSE: 7.5261, MAE: 1.2142, MAPE: 0.9348
+
+Processing sample 4/35
+Sample 3 - Best Loss: 394.2025
+RMSE: 8.1210, MAE: 1.3170, MAPE: 0.9127
+
+Processing sample 5/35
+Sample 4 - Best Loss: 462.9124
+RMSE: 9.5631, MAE: 1.6035, MAPE: 0.8720
+
+Processing sample 6/35
+Sample 5 - Best Loss: 732.6755
+RMSE: 13.2850, MAE: 1.8049, MAPE: 0.8732
+
+Processing sample 7/35
+Sample 6 - Best Loss: 478.9867
+RMSE: 18.3090, MAE: 1.9896, MAPE: 0.8853
+
+Processing sample 8/35
+Sample 7 - Best Loss: 446.2694
+RMSE: 13.9750, MAE: 1.6280, MAPE: 0.8867
+
+Processing sample 9/35
+Sample 8 - Best Loss: 612.7538
+RMSE: 8.6283, MAE: 1.1209, MAPE: 0.8972
+
+Processing sample 10/35
+Sample 9 - Best Loss: 486.4454
+RMSE: 12.5570, MAE: 1.0960, MAPE: 0.9199
+
+Processing sample 11/35
+Sample 10 - Best Loss: 1232.9153
+RMSE: 4.8431, MAE: 0.7459, MAPE: 1.2873
+
+Processing sample 12/35
+Sample 11 - Best Loss: 39479.5703
+RMSE: 8.4062, MAE: 0.9926, MAPE: 3.0140
+
+Processing sample 13/35
+Sample 12 - Best Loss: 18471.9863
+RMSE: 8.5848, MAE: 1.0033, MAPE: 3.2760
+
+Processing sample 14/35
+Sample 13 - Best Loss: 2847302.5000
+RMSE: 9.0296, MAE: 1.0453, MAPE: 3.3402
+
+Processing sample 15/35
+Sample 14 - Best Loss: 124220.2500
+RMSE: 9.1478, MAE: 1.0680, MAPE: 4.3543
+
+Processing sample 16/35
+Sample 15 - Best Loss: 51542.7383
+RMSE: 9.0383, MAE: 1.0435, MAPE: 3.5599
+
+Processing sample 17/35
+Sample 16 - Best Loss: 50634.6328
+RMSE: 8.4006, MAE: 0.9876, MAPE: 2.6728
+
+Processing sample 18/35
+Sample 17 - Best Loss: 826.7050
+RMSE: 6.5785, MAE: 0.9068, MAPE: 1.2740
+
+Processing sample 19/35
+Sample 18 - Best Loss: 436.2554
+RMSE: 10.8018, MAE: 1.6176, MAPE: 0.9570
+
+Processing sample 20/35
+Sample 19 - Best Loss: 523.5798
+RMSE: 17.0178, MAE: 2.9382, MAPE: 0.9143
+
+Processing sample 21/35
+Sample 20 - Best Loss: 467.2719
+RMSE: 9.6884, MAE: 1.7810, MAPE: 0.9017
+
+Processing sample 22/35
+Sample 21 - Best Loss: 432.6541
+RMSE: 8.3610, MAE: 1.4784, MAPE: 0.9202
+
+Processing sample 23/35
+Sample 22 - Best Loss: 450.4016
+RMSE: 11.8416, MAE: 1.7051, MAPE: 0.9060
+
+Processing sample 24/35
+Sample 23 - Best Loss: 418.7125
+RMSE: 10.6246, MAE: 1.5328, MAPE: 0.9045
+
+Processing sample 25/35
+Sample 24 - Best Loss: 407.8147
+RMSE: 8.1608, MAE: 1.2035, MAPE: 0.9914
+
+Processing sample 26/35
+Sample 25 - Best Loss: 371.1261
+RMSE: 7.2185, MAE: 1.1861, MAPE: 0.9759
+
+Processing sample 27/35
+Sample 26 - Best Loss: 511.5278
+RMSE: 6.9580, MAE: 1.1988, MAPE: 0.9928
+
+Processing sample 28/35
+Sample 27 - Best Loss: 413.9792
+RMSE: 7.1837, MAE: 1.2633, MAPE: 0.9371
+
+Processing sample 29/35
+Sample 28 - Best Loss: 467.6438
+RMSE: 10.1027, MAE: 1.8289, MAPE: 0.9066
+
+Processing sample 30/35
+Sample 29 - Best Loss: 494.8521
+RMSE: 12.2443, MAE: 2.1321, MAPE: 0.8760
+
+Processing sample 31/35
+Sample 30 - Best Loss: 488.0768
+RMSE: 14.5446, MAE: 1.9759, MAPE: 0.8828
+
+Processing sample 32/35
+Sample 31 - Best Loss: 544.9130
+RMSE: 14.0080, MAE: 1.6340, MAPE: 0.8595
+
+Processing sample 33/35
+Sample 32 - Best Loss: 695.4371
+RMSE: 6.3841, MAE: 0.9616, MAPE: 0.8476
+
+Processing sample 34/35
+Sample 33 - Best Loss: 234.6670
+RMSE: 0.9999, MAE: 0.1037, MAPE: 0.0994
+
+Processing sample 35/35
+Sample 34 - Best Loss: 1230.6470
+RMSE: 5.0633, MAE: 0.7265, MAPE: 1.3333
+所有预测的OD矩阵已保存为Pred-SSM-BO.npy'
+
+Final Results:
+Average Test Loss: 89919.1016
+RMSE: 9.4963, MAE: 1.3466, MAPE: 1.3417
+Total time: 308.30 minutes

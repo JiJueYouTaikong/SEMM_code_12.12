@@ -1,0 +1,17 @@
+# 忽略数据集
+data/
+*.csv
+*.h5
+*.html
+*.zip
+# 忽略模型 checkpoint
+*.ckpt
+*.pth
+*.pt
+*.npz
+*.npy
+
+# 忽略结果输出
+outputs/
+logs/
+

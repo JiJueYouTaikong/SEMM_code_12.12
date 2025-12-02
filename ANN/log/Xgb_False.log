@@ -1,0 +1,46 @@
+=== 开始网格搜索 ===
+=== 开始网格搜索 ===
+尝试参数组合: {'n_estimators': 50, 'learning_rate': 0.01, 'max_depth': 3, 'n_jobs': 8, 'random_state': 42}
+=== 开始网格搜索 ===
+尝试参数组合: {'n_estimators': 50, 'learning_rate': 0.01, 'max_depth': 3, 'n_jobs': 8, 'random_state': 42}
+=== 开始网格搜索 ===
+尝试参数组合: {'n_estimators': 50, 'learning_rate': 0.01, 'max_depth': 3, 'n_jobs': 8, 'random_state': 42}
+=== 开始网格搜索 ===
+尝试参数组合: {'n_estimators': 50, 'learning_rate': 0.01, 'max_depth': 3, 'n_jobs': 8, 'random_state': 42}
+=== 开始网格搜索 ===
+尝试参数组合: {'n_estimators': 50, 'learning_rate': 0.01, 'max_depth': 3, 'n_jobs': 8, 'random_state': 42}
+=== 开始网格搜索 ===
+尝试参数组合: {'n_estimators': 50, 'learning_rate': 0.01, 'max_depth': 3, 'n_jobs': 8, 'random_state': 42}
+XGB Test RMSE: 6.960362, MAE: 1.097751, MAPE: 0.854134, CPC: 0.581092, JSD: 0.127800
+验证集RMSE: 6.9604
+尝试参数组合: {'n_estimators': 50, 'learning_rate': 0.01, 'max_depth': 4, 'n_jobs': 8, 'random_state': 42}
+XGB Test RMSE: 6.933816, MAE: 1.095988, MAPE: 0.856100, CPC: 0.580687, JSD: 0.127973
+验证集RMSE: 6.9338
+尝试参数组合: {'n_estimators': 50, 'learning_rate': 0.001, 'max_depth': 3, 'n_jobs': 8, 'random_state': 42}
+XGB Test RMSE: 8.153638, MAE: 1.230706, MAPE: 0.926256, CPC: 0.545931, JSD: 0.128380
+验证集RMSE: 8.1536
+尝试参数组合: {'n_estimators': 50, 'learning_rate': 0.001, 'max_depth': 4, 'n_jobs': 8, 'random_state': 42}
+XGB Test RMSE: 8.146734, MAE: 1.230258, MAPE: 0.926041, CPC: 0.545939, JSD: 0.128342
+验证集RMSE: 8.1467
+尝试参数组合: {'n_estimators': 50, 'learning_rate': 0.05, 'max_depth': 3, 'n_jobs': 8, 'random_state': 42}
+XGB Test RMSE: 6.140688, MAE: 0.974553, MAPE: 0.794299, CPC: 0.638831, JSD: 0.131359
+验证集RMSE: 6.1407
+尝试参数组合: {'n_estimators': 50, 'learning_rate': 0.05, 'max_depth': 4, 'n_jobs': 8, 'random_state': 42}
+XGB Test RMSE: 6.264382, MAE: 0.982381, MAPE: 0.810019, CPC: 0.635630, JSD: 0.133431
+验证集RMSE: 6.2644
+尝试参数组合: {'n_estimators': 100, 'learning_rate': 0.01, 'max_depth': 3, 'n_jobs': 8, 'random_state': 42}
+=== 开始网格搜索 ===
+尝试参数组合: {'n_estimators': 50, 'learning_rate': 0.05, 'max_depth': 3, 'n_jobs': 8, 'random_state': 42}
+XGB Test RMSE: 6.140688, MAE: 0.974553, MAPE: 0.794299, CPC: 0.638831, JSD: 0.131359
+验证集RMSE: 6.1407
+
+=== 最优参数 ===
+{'n_estimators': 50, 'learning_rate': 0.05, 'max_depth': 3, 'n_jobs': 8, 'random_state': 42}
+验证集最优RMSE: 6.1407
+✅ 最优模型已保存至: ckpt/xgb_multi_best_False.pkl
+XGB Test RMSE: 7.563274, MAE: 1.061657, MAPE: 0.811678, CPC: 0.632384, JSD: 0.125899
+=== 开始网格搜索 ===
+尝试参数组合: {'n_estimators': 50, 'learning_rate': 0.05, 'max_depth': 3, 'n_jobs': 8, 'random_state': 42}
+开始测试模型: ckpt/xgb_multi_best_False.pkl
+XGB Test RMSE: 7.563274, MAE: 1.061657, MAPE: 0.811678, CPC: 0.632384, JSD: 0.125899
+预测结果已保存至: pred_xgb_False.npy

@@ -1,0 +1,267 @@
+2025-02-17 14:02:37,805 - -----------------------Starting training-------------------------
+2025-02-17 14:02:37,806 - learning rate: 0.1
+2025-02-17 14:02:38,044 - Epoch 1, Training Loss: 88838.35, Validation Loss: 311.19
+2025-02-17 14:02:38,296 - Epoch 2, Training Loss: 6611.19, Validation Loss: 218.53
+2025-02-17 14:02:38,545 - Epoch 3, Training Loss: 161.82, Validation Loss: 212.32
+2025-02-17 14:02:38,797 - Epoch 4, Training Loss: 149.24, Validation Loss: 128.10
+2025-02-17 14:02:39,049 - Epoch 5, Training Loss: 104.30, Validation Loss: 98.19
+2025-02-17 14:02:39,307 - Epoch 6, Training Loss: 87.50, Validation Loss: 94.49
+2025-02-17 14:02:39,570 - Epoch 7, Training Loss: 81.43, Validation Loss: 79.18
+2025-02-17 14:02:39,829 - Epoch 8, Training Loss: 76.34, Validation Loss: 63.34
+2025-02-17 14:02:40,090 - Epoch 9, Training Loss: 83.81, Validation Loss: 67.88
+2025-02-17 14:02:40,324 - Epoch 10, Training Loss: 79.77, Validation Loss: 75.96
+2025-02-17 14:02:40,555 - Epoch 11, Training Loss: 73.48, Validation Loss: 72.54
+2025-02-17 14:02:40,784 - Epoch 12, Training Loss: 76.33, Validation Loss: 65.63
+2025-02-17 14:02:41,012 - Epoch 13, Training Loss: 79.94, Validation Loss: 63.89
+2025-02-17 14:02:41,238 - Epoch 14, Training Loss: 74.28, Validation Loss: 69.38
+2025-02-17 14:02:41,462 - Epoch 15, Training Loss: 71.26, Validation Loss: 63.24
+2025-02-17 14:02:41,713 - Epoch 16, Training Loss: 70.81, Validation Loss: 60.29
+2025-02-17 14:02:41,979 - Epoch 17, Training Loss: 71.16, Validation Loss: 60.34
+2025-02-17 14:02:42,209 - Epoch 18, Training Loss: 75.94, Validation Loss: 69.94
+2025-02-17 14:02:42,446 - Epoch 19, Training Loss: 75.35, Validation Loss: 66.44
+2025-02-17 14:02:42,672 - Epoch 20, Training Loss: 73.33, Validation Loss: 60.27
+2025-02-17 14:02:42,927 - Epoch 21, Training Loss: 69.27, Validation Loss: 61.96
+2025-02-17 14:02:43,155 - Epoch 22, Training Loss: 69.26, Validation Loss: 65.12
+2025-02-17 14:02:43,386 - Epoch 23, Training Loss: 68.64, Validation Loss: 72.83
+2025-02-17 14:02:43,615 - Epoch 24, Training Loss: 75.85, Validation Loss: 69.29
+2025-02-17 14:02:43,843 - Epoch 25, Training Loss: 64.73, Validation Loss: 60.81
+2025-02-17 14:02:44,074 - Epoch 26, Training Loss: 78.68, Validation Loss: 60.79
+2025-02-17 14:02:44,301 - Epoch 27, Training Loss: 75.67, Validation Loss: 71.54
+2025-02-17 14:02:44,526 - Epoch 28, Training Loss: 75.14, Validation Loss: 66.48
+2025-02-17 14:02:44,759 - Epoch 29, Training Loss: 69.29, Validation Loss: 66.10
+2025-02-17 14:02:44,986 - Epoch 30, Training Loss: 64.10, Validation Loss: 61.22
+2025-02-17 14:02:44,986 - Early stopping at epoch 30 due to no improvement in validation loss.
+2025-02-17 14:02:45,444 - learning rate: 0.1
+2025-02-17 14:02:45,445 - Test RMSE: 7.4737701416015625, Test MAE: 1.1826707124710083
+2025-02-17 14:05:21,263 - -----------------------Starting training-------------------------
+2025-02-17 14:05:21,263 - learning rate: 0.2
+2025-02-17 14:05:21,506 - Epoch 1, Training Loss: 5281987.17, Validation Loss: 278.72
+2025-02-17 14:05:21,765 - Epoch 2, Training Loss: 890.08, Validation Loss: 491.92
+2025-02-17 14:05:22,013 - Epoch 3, Training Loss: 242.70, Validation Loss: 222.97
+2025-02-17 14:05:22,274 - Epoch 4, Training Loss: 177.48, Validation Loss: 216.99
+2025-02-17 14:05:22,540 - Epoch 5, Training Loss: 133.55, Validation Loss: 199.79
+2025-02-17 14:05:22,800 - Epoch 6, Training Loss: 151.00, Validation Loss: 175.60
+2025-02-17 14:05:23,061 - Epoch 7, Training Loss: 140.39, Validation Loss: 149.80
+2025-02-17 14:05:23,321 - Epoch 8, Training Loss: 120.42, Validation Loss: 127.65
+2025-02-17 14:05:23,587 - Epoch 9, Training Loss: 110.75, Validation Loss: 109.36
+2025-02-17 14:05:23,861 - Epoch 10, Training Loss: 102.44, Validation Loss: 95.99
+2025-02-17 14:05:24,122 - Epoch 11, Training Loss: 86.03, Validation Loss: 86.49
+2025-02-17 14:05:24,382 - Epoch 12, Training Loss: 86.51, Validation Loss: 80.75
+2025-02-17 14:05:24,661 - Epoch 13, Training Loss: 84.02, Validation Loss: 76.72
+2025-02-17 14:05:24,924 - Epoch 14, Training Loss: 77.60, Validation Loss: 74.88
+2025-02-17 14:05:25,193 - Epoch 15, Training Loss: 74.42, Validation Loss: 71.10
+2025-02-17 14:05:25,452 - Epoch 16, Training Loss: 74.90, Validation Loss: 68.13
+2025-02-17 14:05:25,715 - Epoch 17, Training Loss: 69.58, Validation Loss: 65.44
+2025-02-17 14:05:25,973 - Epoch 18, Training Loss: 75.17, Validation Loss: 65.29
+2025-02-17 14:05:26,235 - Epoch 19, Training Loss: 74.28, Validation Loss: 65.54
+2025-02-17 14:05:26,472 - Epoch 20, Training Loss: 73.12, Validation Loss: 64.98
+2025-02-17 14:05:26,741 - Epoch 21, Training Loss: 68.61, Validation Loss: 64.30
+2025-02-17 14:05:27,003 - Epoch 22, Training Loss: 68.90, Validation Loss: 63.37
+2025-02-17 14:05:27,268 - Epoch 23, Training Loss: 69.18, Validation Loss: 65.19
+2025-02-17 14:05:27,502 - Epoch 24, Training Loss: 74.57, Validation Loss: 66.93
+2025-02-17 14:05:27,754 - Epoch 25, Training Loss: 65.36, Validation Loss: 66.75
+2025-02-17 14:05:27,993 - Epoch 26, Training Loss: 75.24, Validation Loss: 64.68
+2025-02-17 14:05:28,220 - Epoch 27, Training Loss: 74.16, Validation Loss: 64.22
+2025-02-17 14:05:28,454 - Epoch 28, Training Loss: 75.06, Validation Loss: 63.26
+2025-02-17 14:05:28,716 - Epoch 29, Training Loss: 68.89, Validation Loss: 65.33
+2025-02-17 14:05:28,959 - Epoch 30, Training Loss: 64.53, Validation Loss: 64.73
+2025-02-17 14:05:29,202 - Epoch 31, Training Loss: 72.32, Validation Loss: 64.20
+2025-02-17 14:05:29,436 - Epoch 32, Training Loss: 81.39, Validation Loss: 66.39
+2025-02-17 14:05:29,677 - Epoch 33, Training Loss: 75.52, Validation Loss: 62.98
+2025-02-17 14:05:29,937 - Epoch 34, Training Loss: 79.87, Validation Loss: 61.40
+2025-02-17 14:05:30,201 - Epoch 35, Training Loss: 79.97, Validation Loss: 60.33
+2025-02-17 14:05:30,462 - Epoch 36, Training Loss: 68.62, Validation Loss: 60.85
+2025-02-17 14:05:30,700 - Epoch 37, Training Loss: 78.82, Validation Loss: 62.70
+2025-02-17 14:05:30,934 - Epoch 38, Training Loss: 81.22, Validation Loss: 63.08
+2025-02-17 14:05:31,167 - Epoch 39, Training Loss: 68.86, Validation Loss: 64.74
+2025-02-17 14:05:31,398 - Epoch 40, Training Loss: 69.27, Validation Loss: 66.59
+2025-02-17 14:05:31,634 - Epoch 41, Training Loss: 73.93, Validation Loss: 66.32
+2025-02-17 14:05:31,866 - Epoch 42, Training Loss: 68.66, Validation Loss: 63.65
+2025-02-17 14:05:32,098 - Epoch 43, Training Loss: 71.04, Validation Loss: 62.57
+2025-02-17 14:05:32,330 - Epoch 44, Training Loss: 68.74, Validation Loss: 61.78
+2025-02-17 14:05:32,558 - Epoch 45, Training Loss: 68.81, Validation Loss: 64.19
+2025-02-17 14:05:32,558 - Early stopping at epoch 45 due to no improvement in validation loss.
+2025-02-17 14:05:32,830 - learning rate: 0.2
+2025-02-17 14:05:32,830 - Test RMSE: 7.630699157714844, Test MAE: 1.3552748560905457
+2025-02-17 14:05:44,669 - -----------------------Starting training-------------------------
+2025-02-17 14:05:44,669 - learning rate: 0.05
+2025-02-17 14:05:44,911 - Epoch 1, Training Loss: 7240.50, Validation Loss: 72424.91
+2025-02-17 14:05:45,167 - Epoch 2, Training Loss: 18761.98, Validation Loss: 212.91
+2025-02-17 14:05:45,416 - Epoch 3, Training Loss: 156.33, Validation Loss: 201.42
+2025-02-17 14:05:45,667 - Epoch 4, Training Loss: 151.39, Validation Loss: 168.76
+2025-02-17 14:05:45,920 - Epoch 5, Training Loss: 117.71, Validation Loss: 131.89
+2025-02-17 14:05:46,169 - Epoch 6, Training Loss: 108.43, Validation Loss: 116.12
+2025-02-17 14:05:46,423 - Epoch 7, Training Loss: 91.99, Validation Loss: 84.29
+2025-02-17 14:05:46,679 - Epoch 8, Training Loss: 85.67, Validation Loss: 72.57
+2025-02-17 14:05:46,939 - Epoch 9, Training Loss: 85.93, Validation Loss: 79.58
+2025-02-17 14:05:47,169 - Epoch 10, Training Loss: 84.08, Validation Loss: 82.79
+2025-02-17 14:05:47,413 - Epoch 11, Training Loss: 75.57, Validation Loss: 72.27
+2025-02-17 14:05:47,672 - Epoch 12, Training Loss: 77.36, Validation Loss: 67.33
+2025-02-17 14:05:47,926 - Epoch 13, Training Loss: 80.53, Validation Loss: 67.63
+2025-02-17 14:05:48,153 - Epoch 14, Training Loss: 76.15, Validation Loss: 73.32
+2025-02-17 14:05:48,382 - Epoch 15, Training Loss: 71.78, Validation Loss: 62.36
+2025-02-17 14:05:48,637 - Epoch 16, Training Loss: 70.98, Validation Loss: 59.34
+2025-02-17 14:05:48,898 - Epoch 17, Training Loss: 70.87, Validation Loss: 62.01
+2025-02-17 14:05:49,131 - Epoch 18, Training Loss: 76.06, Validation Loss: 72.45
+2025-02-17 14:05:49,354 - Epoch 19, Training Loss: 75.47, Validation Loss: 65.16
+2025-02-17 14:05:49,583 - Epoch 20, Training Loss: 73.83, Validation Loss: 59.86
+2025-02-17 14:05:49,813 - Epoch 21, Training Loss: 69.91, Validation Loss: 63.36
+2025-02-17 14:05:50,040 - Epoch 22, Training Loss: 69.28, Validation Loss: 65.79
+2025-02-17 14:05:50,269 - Epoch 23, Training Loss: 68.95, Validation Loss: 71.65
+2025-02-17 14:05:50,495 - Epoch 24, Training Loss: 75.86, Validation Loss: 68.08
+2025-02-17 14:05:50,722 - Epoch 25, Training Loss: 64.62, Validation Loss: 60.81
+2025-02-17 14:05:50,951 - Epoch 26, Training Loss: 78.57, Validation Loss: 61.88
+2025-02-17 14:05:50,951 - Early stopping at epoch 26 due to no improvement in validation loss.
+2025-02-17 14:05:51,193 - learning rate: 0.05
+2025-02-17 14:05:51,193 - Test RMSE: 7.61865496635437, Test MAE: 1.391595184803009
+2025-02-17 14:06:04,142 - -----------------------Starting training-------------------------
+2025-02-17 14:06:04,142 - learning rate: 0.03
+2025-02-17 14:06:04,378 - Epoch 1, Training Loss: 200.63, Validation Loss: 216.54
+2025-02-17 14:06:04,626 - Epoch 2, Training Loss: 168.80, Validation Loss: 163.35
+2025-02-17 14:06:04,878 - Epoch 3, Training Loss: 126.09, Validation Loss: 150.19
+2025-02-17 14:06:05,128 - Epoch 4, Training Loss: 119.31, Validation Loss: 111.65
+2025-02-17 14:06:05,378 - Epoch 5, Training Loss: 105.02, Validation Loss: 87.07
+2025-02-17 14:06:05,629 - Epoch 6, Training Loss: 90.55, Validation Loss: 119.28
+2025-02-17 14:06:05,857 - Epoch 7, Training Loss: 90.17, Validation Loss: 77.12
+2025-02-17 14:06:06,107 - Epoch 8, Training Loss: 83.20, Validation Loss: 66.80
+2025-02-17 14:06:06,364 - Epoch 9, Training Loss: 81.81, Validation Loss: 88.68
+2025-02-17 14:06:06,593 - Epoch 10, Training Loss: 87.47, Validation Loss: 77.38
+2025-02-17 14:06:06,819 - Epoch 11, Training Loss: 76.20, Validation Loss: 62.33
+2025-02-17 14:06:07,078 - Epoch 12, Training Loss: 76.64, Validation Loss: 72.95
+2025-02-17 14:06:07,303 - Epoch 13, Training Loss: 78.75, Validation Loss: 71.79
+2025-02-17 14:06:07,529 - Epoch 14, Training Loss: 74.57, Validation Loss: 64.58
+2025-02-17 14:06:07,761 - Epoch 15, Training Loss: 71.17, Validation Loss: 59.82
+2025-02-17 14:06:08,010 - Epoch 16, Training Loss: 75.76, Validation Loss: 64.28
+2025-02-17 14:06:08,234 - Epoch 17, Training Loss: 67.90, Validation Loss: 62.02
+2025-02-17 14:06:08,460 - Epoch 18, Training Loss: 75.53, Validation Loss: 67.98
+2025-02-17 14:06:08,683 - Epoch 19, Training Loss: 73.94, Validation Loss: 61.11
+2025-02-17 14:06:08,913 - Epoch 20, Training Loss: 74.30, Validation Loss: 63.90
+2025-02-17 14:06:09,137 - Epoch 21, Training Loss: 71.44, Validation Loss: 66.18
+2025-02-17 14:06:09,363 - Epoch 22, Training Loss: 71.44, Validation Loss: 62.14
+2025-02-17 14:06:09,588 - Epoch 23, Training Loss: 68.36, Validation Loss: 77.97
+2025-02-17 14:06:09,824 - Epoch 24, Training Loss: 76.99, Validation Loss: 65.76
+2025-02-17 14:06:10,049 - Epoch 25, Training Loss: 63.99, Validation Loss: 58.69
+2025-02-17 14:06:10,300 - Epoch 26, Training Loss: 77.58, Validation Loss: 70.35
+2025-02-17 14:06:10,525 - Epoch 27, Training Loss: 79.87, Validation Loss: 74.90
+2025-02-17 14:06:10,751 - Epoch 28, Training Loss: 81.24, Validation Loss: 61.02
+2025-02-17 14:06:10,980 - Epoch 29, Training Loss: 71.33, Validation Loss: 76.66
+2025-02-17 14:06:11,207 - Epoch 30, Training Loss: 65.85, Validation Loss: 60.30
+2025-02-17 14:06:11,428 - Epoch 31, Training Loss: 80.24, Validation Loss: 71.15
+2025-02-17 14:06:11,643 - Epoch 32, Training Loss: 105.76, Validation Loss: 96.58
+2025-02-17 14:06:11,876 - Epoch 33, Training Loss: 81.59, Validation Loss: 59.26
+2025-02-17 14:06:12,110 - Epoch 34, Training Loss: 88.70, Validation Loss: 62.70
+2025-02-17 14:06:12,334 - Epoch 35, Training Loss: 82.39, Validation Loss: 67.45
+2025-02-17 14:06:12,334 - Early stopping at epoch 35 due to no improvement in validation loss.
+2025-02-17 14:06:12,588 - learning rate: 0.03
+2025-02-17 14:06:12,588 - Test RMSE: 7.594138860702515, Test MAE: 1.3864631652832031
+2025-02-17 14:06:24,500 - -----------------------Starting training-------------------------
+2025-02-17 14:06:24,501 - learning rate: 0.02
+2025-02-17 14:06:24,748 - Epoch 1, Training Loss: 154.25, Validation Loss: 501.98
+2025-02-17 14:06:24,997 - Epoch 2, Training Loss: 249.20, Validation Loss: 211.98
+2025-02-17 14:06:25,247 - Epoch 3, Training Loss: 148.99, Validation Loss: 154.49
+2025-02-17 14:06:25,496 - Epoch 4, Training Loss: 118.75, Validation Loss: 110.83
+2025-02-17 14:06:25,745 - Epoch 5, Training Loss: 97.06, Validation Loss: 115.88
+2025-02-17 14:06:25,980 - Epoch 6, Training Loss: 102.41, Validation Loss: 104.64
+2025-02-17 14:06:26,228 - Epoch 7, Training Loss: 81.14, Validation Loss: 74.19
+2025-02-17 14:06:26,491 - Epoch 8, Training Loss: 83.47, Validation Loss: 82.43
+2025-02-17 14:06:26,718 - Epoch 9, Training Loss: 84.14, Validation Loss: 83.64
+2025-02-17 14:06:26,943 - Epoch 10, Training Loss: 79.33, Validation Loss: 65.90
+2025-02-17 14:06:27,193 - Epoch 11, Training Loss: 77.06, Validation Loss: 70.24
+2025-02-17 14:06:27,420 - Epoch 12, Training Loss: 78.88, Validation Loss: 77.37
+2025-02-17 14:06:27,649 - Epoch 13, Training Loss: 80.70, Validation Loss: 64.21
+2025-02-17 14:06:27,909 - Epoch 14, Training Loss: 75.05, Validation Loss: 68.00
+2025-02-17 14:06:28,136 - Epoch 15, Training Loss: 70.78, Validation Loss: 60.67
+2025-02-17 14:06:28,391 - Epoch 16, Training Loss: 73.35, Validation Loss: 61.37
+2025-02-17 14:06:28,617 - Epoch 17, Training Loss: 69.33, Validation Loss: 63.76
+2025-02-17 14:06:28,846 - Epoch 18, Training Loss: 76.31, Validation Loss: 70.38
+2025-02-17 14:06:29,076 - Epoch 19, Training Loss: 74.31, Validation Loss: 60.62
+2025-02-17 14:06:29,334 - Epoch 20, Training Loss: 74.76, Validation Loss: 63.25
+2025-02-17 14:06:29,560 - Epoch 21, Training Loss: 71.73, Validation Loss: 68.30
+2025-02-17 14:06:29,791 - Epoch 22, Training Loss: 71.16, Validation Loss: 61.89
+2025-02-17 14:06:30,021 - Epoch 23, Training Loss: 68.50, Validation Loss: 73.68
+2025-02-17 14:06:30,248 - Epoch 24, Training Loss: 76.24, Validation Loss: 68.69
+2025-02-17 14:06:30,474 - Epoch 25, Training Loss: 64.25, Validation Loss: 58.84
+2025-02-17 14:06:30,743 - Epoch 26, Training Loss: 79.16, Validation Loss: 65.84
+2025-02-17 14:06:30,972 - Epoch 27, Training Loss: 78.70, Validation Loss: 76.98
+2025-02-17 14:06:31,199 - Epoch 28, Training Loss: 78.81, Validation Loss: 62.07
+2025-02-17 14:06:31,427 - Epoch 29, Training Loss: 69.73, Validation Loss: 69.55
+2025-02-17 14:06:31,672 - Epoch 30, Training Loss: 64.82, Validation Loss: 61.78
+2025-02-17 14:06:32,024 - Epoch 31, Training Loss: 77.45, Validation Loss: 68.46
+2025-02-17 14:06:32,807 - Epoch 32, Training Loss: 96.98, Validation Loss: 85.80
+2025-02-17 14:06:33,049 - Epoch 33, Training Loss: 78.90, Validation Loss: 59.25
+2025-02-17 14:06:33,356 - Epoch 34, Training Loss: 84.70, Validation Loss: 60.78
+2025-02-17 14:06:33,610 - Epoch 35, Training Loss: 81.92, Validation Loss: 64.87
+2025-02-17 14:06:33,610 - Early stopping at epoch 35 due to no improvement in validation loss.
+2025-02-17 14:06:33,864 - learning rate: 0.02
+2025-02-17 14:06:33,864 - Test RMSE: 7.569180011749268, Test MAE: 1.4065310955047607
+2025-02-17 14:06:40,271 - -----------------------Starting training-------------------------
+2025-02-17 14:06:40,271 - learning rate: 0.01
+2025-02-17 14:06:40,501 - Epoch 1, Training Loss: 158.70, Validation Loss: 188.00
+2025-02-17 14:06:40,750 - Epoch 2, Training Loss: 145.08, Validation Loss: 131.36
+2025-02-17 14:06:41,002 - Epoch 3, Training Loss: 110.14, Validation Loss: 128.91
+2025-02-17 14:06:41,253 - Epoch 4, Training Loss: 108.81, Validation Loss: 98.29
+2025-02-17 14:06:41,505 - Epoch 5, Training Loss: 102.77, Validation Loss: 79.91
+2025-02-17 14:06:41,759 - Epoch 6, Training Loss: 87.94, Validation Loss: 120.10
+2025-02-17 14:06:41,987 - Epoch 7, Training Loss: 93.44, Validation Loss: 80.34
+2025-02-17 14:06:42,212 - Epoch 8, Training Loss: 80.88, Validation Loss: 66.31
+2025-02-17 14:06:42,465 - Epoch 9, Training Loss: 83.54, Validation Loss: 82.10
+2025-02-17 14:06:42,704 - Epoch 10, Training Loss: 88.01, Validation Loss: 85.29
+2025-02-17 14:06:42,933 - Epoch 11, Training Loss: 75.90, Validation Loss: 62.66
+2025-02-17 14:06:43,193 - Epoch 12, Training Loss: 76.27, Validation Loss: 66.07
+2025-02-17 14:06:43,423 - Epoch 13, Training Loss: 78.34, Validation Loss: 73.78
+2025-02-17 14:06:43,656 - Epoch 14, Training Loss: 77.13, Validation Loss: 69.32
+2025-02-17 14:06:43,883 - Epoch 15, Training Loss: 70.87, Validation Loss: 59.18
+2025-02-17 14:06:44,136 - Epoch 16, Training Loss: 75.50, Validation Loss: 63.46
+2025-02-17 14:06:44,362 - Epoch 17, Training Loss: 67.77, Validation Loss: 63.84
+2025-02-17 14:06:44,590 - Epoch 18, Training Loss: 75.47, Validation Loss: 67.03
+2025-02-17 14:06:44,841 - Epoch 19, Training Loss: 73.88, Validation Loss: 60.93
+2025-02-17 14:06:45,067 - Epoch 20, Training Loss: 74.07, Validation Loss: 64.12
+2025-02-17 14:06:45,302 - Epoch 21, Training Loss: 71.18, Validation Loss: 66.00
+2025-02-17 14:06:45,533 - Epoch 22, Training Loss: 71.24, Validation Loss: 62.24
+2025-02-17 14:06:45,760 - Epoch 23, Training Loss: 68.35, Validation Loss: 77.13
+2025-02-17 14:06:45,987 - Epoch 24, Training Loss: 76.84, Validation Loss: 66.36
+2025-02-17 14:06:46,218 - Epoch 25, Training Loss: 63.97, Validation Loss: 58.67
+2025-02-17 14:06:46,470 - Epoch 26, Training Loss: 77.95, Validation Loss: 69.35
+2025-02-17 14:06:46,698 - Epoch 27, Training Loss: 79.76, Validation Loss: 75.79
+2025-02-17 14:06:46,921 - Epoch 28, Training Loss: 80.70, Validation Loss: 60.69
+2025-02-17 14:06:47,153 - Epoch 29, Training Loss: 70.80, Validation Loss: 74.47
+2025-02-17 14:06:47,388 - Epoch 30, Training Loss: 65.36, Validation Loss: 60.26
+2025-02-17 14:06:47,633 - Epoch 31, Training Loss: 78.66, Validation Loss: 72.09
+2025-02-17 14:06:47,875 - Epoch 32, Training Loss: 104.87, Validation Loss: 93.22
+2025-02-17 14:06:48,108 - Epoch 33, Training Loss: 80.82, Validation Loss: 59.47
+2025-02-17 14:06:48,337 - Epoch 34, Training Loss: 89.30, Validation Loss: 64.21
+2025-02-17 14:06:48,569 - Epoch 35, Training Loss: 82.39, Validation Loss: 66.77
+2025-02-17 14:06:48,569 - Early stopping at epoch 35 due to no improvement in validation loss.
+2025-02-17 14:06:48,837 - learning rate: 0.01
+2025-02-17 14:06:48,837 - Test RMSE: 7.595309734344482, Test MAE: 1.3553483486175537
+2025-02-17 14:07:19,474 - -----------------------Starting training-------------------------
+2025-02-17 14:07:19,474 - learning rate: 0.005
+2025-02-17 14:07:19,746 - Epoch 1, Training Loss: 160.63, Validation Loss: 205.42
+2025-02-17 14:07:20,025 - Epoch 2, Training Loss: 154.62, Validation Loss: 150.51
+2025-02-17 14:07:20,282 - Epoch 3, Training Loss: 113.18, Validation Loss: 116.59
+2025-02-17 14:07:20,543 - Epoch 4, Training Loss: 100.26, Validation Loss: 90.90
+2025-02-17 14:07:20,801 - Epoch 5, Training Loss: 91.91, Validation Loss: 82.52
+2025-02-17 14:07:21,054 - Epoch 6, Training Loss: 85.25, Validation Loss: 108.31
+2025-02-17 14:07:21,350 - Epoch 7, Training Loss: 85.52, Validation Loss: 75.24
+2025-02-17 14:07:21,657 - Epoch 8, Training Loss: 78.77, Validation Loss: 65.36
+2025-02-17 14:07:21,955 - Epoch 9, Training Loss: 82.82, Validation Loss: 77.33
+2025-02-17 14:07:22,182 - Epoch 10, Training Loss: 84.87, Validation Loss: 83.29
+2025-02-17 14:07:22,406 - Epoch 11, Training Loss: 74.47, Validation Loss: 64.59
+2025-02-17 14:07:22,673 - Epoch 12, Training Loss: 75.66, Validation Loss: 63.16
+2025-02-17 14:07:22,930 - Epoch 13, Training Loss: 78.77, Validation Loss: 70.79
+2025-02-17 14:07:23,156 - Epoch 14, Training Loss: 77.40, Validation Loss: 74.29
+2025-02-17 14:07:23,382 - Epoch 15, Training Loss: 71.15, Validation Loss: 60.22
+2025-02-17 14:07:23,640 - Epoch 16, Training Loss: 72.53, Validation Loss: 60.04
+2025-02-17 14:07:23,895 - Epoch 17, Training Loss: 69.31, Validation Loss: 64.73
+2025-02-17 14:07:24,122 - Epoch 18, Training Loss: 76.28, Validation Loss: 70.94
+2025-02-17 14:07:24,353 - Epoch 19, Training Loss: 74.47, Validation Loss: 61.42
+2025-02-17 14:07:24,599 - Epoch 20, Training Loss: 74.50, Validation Loss: 61.06
+2025-02-17 14:07:24,825 - Epoch 21, Training Loss: 70.85, Validation Loss: 67.00
+2025-02-17 14:07:25,051 - Epoch 22, Training Loss: 69.29, Validation Loss: 63.58
+2025-02-17 14:07:25,284 - Epoch 23, Training Loss: 68.61, Validation Loss: 70.51
+2025-02-17 14:07:25,512 - Epoch 24, Training Loss: 75.41, Validation Loss: 68.73
+2025-02-17 14:07:25,738 - Epoch 25, Training Loss: 64.55, Validation Loss: 60.17
+2025-02-17 14:07:25,966 - Epoch 26, Training Loss: 78.69, Validation Loss: 63.07
+2025-02-17 14:07:25,966 - Early stopping at epoch 26 due to no improvement in validation loss.
+2025-02-17 14:07:26,205 - learning rate: 0.005
+2025-02-17 14:07:26,206 - Test RMSE: 7.531174182891846, Test MAE: 1.3638291358947754

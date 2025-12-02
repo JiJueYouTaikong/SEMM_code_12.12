@@ -1,0 +1,20 @@
+Samples: 3, Epochs: 3, Lr: 40, Tol: 0.01, Test Loss: 15.6627 RMSE: 3.6496 MAE: 0.5446 MAPE: 0.7176
+Samples: 3, Epochs: 10, Lr: 40, Tol: 0.01, Test Loss: 7.4693 RMSE: 3.5762 MAE: 0.5372 MAPE: 0.7246
+Samples: 3, Epochs: 30, Lr: 40, Tol: 0.01, Test Loss: 2.7392 RMSE: 3.4828 MAE: 0.5371 MAPE: 0.7408
+Samples: 35, Epochs: 1000, Lr: 40, Tol: 0.01, Test Loss: 1.1586 RMSE: 7.1059 MAE: 1.1311 MAPE: 1.1387
+Samples: 3, Epochs: 100, Lr: 40, Tol: 0.01, Test Loss: 1.4916 RMSE: 3.2436 MAE: 0.5128 MAPE: 0.7032, Times: 1.9021385073661805
+Samples: 1, Epochs: 20, Lr: 40, Tol: 0.01, Test Loss: 5.8772 RMSE: 4.6308 MAE: 0.6484 MAPE: 1.2131, Times: 0.21732482115427654
+Samples: 35, Epochs: 1000, Lr: 40, Tol: 0.01, Test Loss: 1.1586 RMSE: 7.1059 MAE: 1.1311 MAPE: 1.1387, Times: 323.8207511305809
+Samples: 2, Epochs: 2, Lr: 40, Tol: 0.01, Test Loss: 5.7436 RMSE: 2.4200 MAE: 0.3562 MAPE: 0.6592, Times: 0.0520419438680013
+Samples: 2, Epochs: 2, Lr: 40, Tol: 0.01, Test Loss: nan RMSE: inf MAE: inf MAPE: 2.8321, Times: 0.056450843811035156
+Samples: 2, Epochs: 2, Lr: 40, Tol: 0.01, Test Loss: 188.1248 RMSE: 60.9705 MAE: 2.6505 MAPE: 2.8354, Times: 0.04404904445012411
+Samples: 2, Epochs: 10, Lr: 0.01, Tol: 0.01, Test Loss: 663.4943 RMSE: 2.4334 MAE: 0.3583 MAPE: 0.6648, Times: 0.12436180114746094
+Samples: 2, Epochs: 20, Lr: 0.01, Tol: 0.01, Test Loss: 554.2372 RMSE: 2.4314 MAE: 0.3564 MAPE: 0.6618, Times: 0.2162259578704834
+Samples: 2, Epochs: 20, Lr: 0.01, Tol: 0.1, Test Loss: 554.2372 RMSE: 2.4314 MAE: 0.3564 MAPE: 0.6618, Times: 0.2235111157099406
+Samples: 2, Epochs: 20, Lr: 0.1, Tol: 0.1, Test Loss: 238.7701 RMSE: 2.4141 MAE: 0.3432 MAPE: 0.6387, Times: 0.22140054702758788
+Samples: 2, Epochs: 200, Lr: 1, Tol: 0.1, Test Loss: 50.9141 RMSE: 2.6295 MAE: 0.3137 MAPE: 0.5405, Times: 1.6006093581517538
+Samples: 2, Epochs: 500, Lr: 1, Tol: 0.1, Test Loss: 43.0931 RMSE: 2.5513 MAE: 0.3017 MAPE: 0.5321, Times: 4.531111788749695
+Samples: 35, Epochs: 10000, Lr: 20, Tol: 0.4, Test Loss: 0.7018 RMSE: 6.7826 MAE: 1.1079 MAPE: 1.1404, Times: 1902.661261745294
+Samples: 3, Epochs: 500, Lr: 20, Tol: 0.4, Test Loss: 0.6020 RMSE: 3.0741 MAE: 0.4987 MAPE: 0.6986, Times: 9.578749326864878
+Samples: 35, Epochs: 1000, Lr: 500, Tol: 0.5, Test Loss: 0.5105 RMSE: 7.5843 MAE: 1.3036 MAPE: 1.3631, Times: 699.2073154052099
+Samples: 35, Epochs: 1000, Lr: 500, Tol: 0.5, Test Loss: 0.5105 RMSE: 7.5843 MAE: 1.3036 MAPE: 1.3631, Times: 761.4914814154307

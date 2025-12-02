@@ -1,0 +1,162 @@
+=== 训练参数 ===
+{'n_estimators': 50, 'max_depth': 3, 'min_samples_leaf': 2, 'n_jobs': -1, 'random_state': 42}
+
+Validation MSE: 37.9317
+
+=== 测试集评估结果 ===
+Test RMSE: 7.8618
+Test MAE:  1.1366
+Test MAPE: 0.8671
+Test CPC:  0.6362
+Test JSD:  0.1195
+
+✅ 任务完成
+
+=== 训练参数 ===
+{'n_estimators': 50, 'max_depth': 3, 'min_samples_leaf': 2, 'n_jobs': -1, 'random_state': 42}
+
+Validation MSE: 37.9317
+
+=== 测试集评估结果 ===
+Test RMSE: 7.8618
+Test MAE:  1.1366
+Test MAPE: 0.8671
+Test CPC:  0.6362
+Test JSD:  0.1195
+=== 训练参数 ===
+{'n_estimators': 50, 'max_depth': 4, 'min_samples_leaf': 2, 'n_jobs': -1, 'random_state': 42}
+
+Validation MSE: 36.6739
+
+=== 测试集评估结果 ===
+Test RMSE: 7.6466
+Test MAE:  1.1019
+Test MAPE: 0.8398
+Test CPC:  0.6417
+Test JSD:  0.1181
+=== 训练参数 ===
+{'n_estimators': 50, 'max_depth': 5, 'min_samples_leaf': 2, 'n_jobs': -1, 'random_state': 42}
+
+Validation MSE: 36.9168
+
+=== 测试集评估结果 ===
+Test RMSE: 7.6631
+Test MAE:  1.1052
+Test MAPE: 0.8395
+Test CPC:  0.6400
+Test JSD:  0.1186
+=== 训练参数 ===
+{'n_estimators': 50, 'max_depth': 7, 'min_samples_leaf': 2, 'n_jobs': -1, 'random_state': 42}
+
+Validation MSE: 36.6975
+
+=== 测试集评估结果 ===
+Test RMSE: 7.6270
+Test MAE:  1.0948
+Test MAPE: 0.8318
+Test CPC:  0.6418
+Test JSD:  0.1188
+=== 训练参数 ===
+{'n_estimators': 100, 'max_depth': 5, 'min_samples_leaf': 2, 'n_jobs': -1, 'random_state': 42}
+
+Validation MSE: 36.3692
+
+=== 测试集评估结果 ===
+Test RMSE: 7.6188
+Test MAE:  1.1013
+Test MAPE: 0.8368
+Test CPC:  0.6402
+Test JSD:  0.1188
+=== 训练参数 ===
+{'n_estimators': 50, 'max_depth': 5, 'min_samples_leaf': 3, 'n_jobs': -1, 'random_state': 42}
+
+Validation MSE: 36.7326
+
+=== 测试集评估结果 ===
+Test RMSE: 7.6994
+Test MAE:  1.1102
+Test MAPE: 0.8455
+Test CPC:  0.6391
+Test JSD:  0.1186
+=== 训练参数 ===
+{'n_estimators': 50, 'max_depth': 5, 'min_samples_leaf': 5, 'n_jobs': -1, 'random_state': 42}
+
+Validation MSE: 37.1494
+
+=== 测试集评估结果 ===
+Test RMSE: 7.7646
+Test MAE:  1.1228
+Test MAPE: 0.8560
+Test CPC:  0.6364
+Test JSD:  0.1195
+网格搜索完成！共尝试 24 种参数组合
+
+最佳参数: {'n_estimators': 100, 'max_depth': 5, 'min_samples_leaf': 1, 'n_jobs': -1, 'random_state': 42}
+
+最佳验证集MSE: 35.4622
+
+网格搜索完成！共尝试 24 种参数组合
+
+最佳参数: {'n_estimators': 100, 'max_depth': 5, 'min_samples_leaf': 1, 'n_jobs': -1, 'random_state': 42}
+
+最佳验证集MSE: 35.4622
+
+=== 训练参数 ===
+{'n_estimators': 100, 'max_depth': 5, 'min_samples_leaf': 1, 'n_jobs': -1, 'random_state': 42}
+
+Validation MSE: 35.4622
+
+=== 测试集评估结果 ===
+Test RMSE: 7.4939
+Test MAE:  1.0817
+Test MAPE: 0.8242
+Test CPC:  0.6457
+Test JSD:  0.1184
+
+
+===== 开始运行 is_mcm=False 时间: 2025-12-02 09:10:00.993188 =====
+使用直接指定的最佳参数（不网格搜索）: {'n_estimators': 100, 'max_depth': 5, 'min_samples_leaf': 1, 'n_jobs': -1, 'random_state': 42}
+=== 训练参数 ===
+{'n_estimators': 100, 'max_depth': 5, 'min_samples_leaf': 1, 'n_jobs': -1, 'random_state': 42}
+
+Validation MSE: 35.4622
+
+=== 测试集评估结果 ===
+Test RMSE: 7.4939
+Test MAE:  1.0817
+Test MAPE: 0.8242
+Test CPC:  0.6457
+Test JSD:  0.1184
+Saved predictions -> predictions_is_mcm_False_20251202_091003.npy
+
+
+===== 开始运行 is_mcm=False 时间: 2025-12-02 09:19:59.887799 =====
+使用直接指定的最佳参数（不网格搜索）: {'n_estimators': 100, 'max_depth': 5, 'min_samples_leaf': 1, 'n_jobs': -1, 'random_state': 42}
+=== 训练参数 ===
+{'n_estimators': 100, 'max_depth': 5, 'min_samples_leaf': 1, 'n_jobs': -1, 'random_state': 42}
+
+Validation MSE: 35.4622
+
+=== 测试集评估结果 ===
+Test RMSE: 7.4939
+Test MAE:  1.0817
+Test MAPE: 0.8242
+Test CPC:  0.6457
+Test JSD:  0.1184
+Saved predictions -> predictions_is_mcm_False_20251202_092002.npy
+
+
+===== 开始运行 is_mcm=False 时间: 2025-12-02 09:21:10.262501 =====
+使用直接指定的最佳参数（不网格搜索）: {'n_estimators': 100, 'max_depth': 5, 'min_samples_leaf': 1, 'n_jobs': -1, 'random_state': 42}
+=== 训练参数 ===
+{'n_estimators': 100, 'max_depth': 5, 'min_samples_leaf': 1, 'n_jobs': -1, 'random_state': 42}
+
+Validation MSE: 35.4622
+
+=== 测试集评估结果 ===
+Test RMSE: 7.4939
+Test MAE:  1.0817
+Test MAPE: 0.8242
+Test CPC:  0.6457
+Test JSD:  0.1184
+Saved predictions -> predictions_is_mcm_False_20251202_092112.npy

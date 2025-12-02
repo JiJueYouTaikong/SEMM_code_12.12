@@ -1,0 +1,96 @@
+	 	 (Param: MCM=True, Method=WT, Stop=nll, Layers=8, Hidden=256, Dropout=0.2, LR=0.01)
+Patience=20 Loss: 457414.5000 【RMSE】: 【11.3245】 MAE: 1.2710 MAPE: 0.9195 CPC: 0.2971 JSD: 0.1339
+	 	 (Param: MCM=True, Method=WT, Stop=nll, Layers=8, Hidden=256, Dropout=0.2, LR=0.005)
+Patience=20 Loss: 457414.5000 【RMSE】: 【11.3245】 MAE: 1.2710 MAPE: 0.9195 CPC: 0.2971 JSD: 0.1339
+	 	 (Param: MCM=True, Method=WT, Stop=nll, Layers=8, Hidden=256, Dropout=0.2, LR=0.0045)
+Patience=20 Loss: 457414.5000 【RMSE】: 【11.3245】 MAE: 1.2710 MAPE: 0.9195 CPC: 0.2971 JSD: 0.1339
+	 	 (Param: MCM=True, Method=WT, Stop=nll, Layers=8, Hidden=256, Dropout=0.2, LR=0.004)
+Patience=20 Loss: 386928.2148 【RMSE】: 【6.5809】 MAE: 0.9413 MAPE: 0.8952 CPC: 0.6386 JSD: 0.1114
+	 	 (Param: MCM=True, Method=WT, Stop=nll, Layers=8, Hidden=256, Dropout=0.2, LR=0.0035)
+Patience=20 Loss: 386928.2148 【RMSE】: 【6.5809】 MAE: 0.9413 MAPE: 0.8952 CPC: 0.6386 JSD: 0.1114
+	 	 (Param: MCM=True, Method=WT, Stop=nll, Layers=8, Hidden=256, Dropout=0.2, LR=0.003)
+Patience=20 Loss: 386835.7578 【RMSE】: 【6.5796】 MAE: 0.8908 MAPE: 0.8217 CPC: 0.6391 JSD: 0.1148
+	 	 (Param: MCM=True, Method=WT, Stop=nll, Layers=8, Hidden=256, Dropout=0.2, LR=0.0025)
+Patience=20 Loss: 386835.7578 【RMSE】: 【6.5796】 MAE: 0.8908 MAPE: 0.8217 CPC: 0.6391 JSD: 0.1148
+	 	 (Param: MCM=True, Method=WT, Stop=nll, Layers=8, Hidden=256, Dropout=0.2, LR=0.002)
+Patience=20 Loss: 385345.7969 【RMSE】: 【6.5424】 MAE: 0.9152 MAPE: 0.8373 CPC: 0.6358 JSD: 0.1111
+	 	 (Param: MCM=True, Method=WT, Stop=nll, Layers=8, Hidden=256, Dropout=0.2, LR=0.0015)
+Patience=20 Loss: 385127.7812 【RMSE】: 【6.5791】 MAE: 0.9678 MAPE: 0.9423 CPC: 0.6477 JSD: 0.1122
+	 	 (Param: MCM=True, Method=WT, Stop=nll, Layers=8, Hidden=256, Dropout=0.2, LR=0.001)
+Patience=20 Loss: 383461.0645 【RMSE】: 【6.0628】 MAE: 0.8494 MAPE: 0.7894 CPC: 0.6593 JSD: 0.1068
+	 	 (Param: MCM=True, Method=WT, Stop=nll, Layers=8, Hidden=256, Dropout=0.2, LR=0.0005)
+Patience=20 Loss: 383074.3867 【RMSE】: 【6.3410】 MAE: 0.8778 MAPE: 0.8296 CPC: 0.6518 JSD: 0.1110
+	 	 (Param: MCM=True, Method=WT, Stop=nll, Layers=8, Hidden=256, Dropout=0.2, LR=0.0004)
+Patience=20 Loss: 383228.6211 【RMSE】: 【6.2163】 MAE: 0.8664 MAPE: 0.8104 CPC: 0.6447 JSD: 0.1102
+	 	 (Param: MCM=True, Method=WT, Stop=nll, Layers=8, Hidden=256, Dropout=0.2, LR=0.0003)
+Patience=20 Loss: 383555.6250 【RMSE】: 【6.1011】 MAE: 0.8757 MAPE: 0.8404 CPC: 0.6554 JSD: 0.1079
+	 	 (Param: MCM=True, Method=WT, Stop=nll, Layers=8, Hidden=256, Dropout=0.2, LR=0.0002)
+Patience=20 Loss: 383423.1816 【RMSE】: 【6.1471】 MAE: 0.8668 MAPE: 0.8385 CPC: 0.6592 JSD: 0.1084
+	 	 (Param: MCM=True, Method=WT, Stop=nll, Layers=8, Hidden=256, Dropout=0.2, LR=0.0001)
+Patience=20 Loss: 383267.2773 【RMSE】: 【6.4410】 MAE: 0.8641 MAPE: 0.8067 CPC: 0.6486 JSD: 0.1101
+	 	 (Param: MCM=True, Method=WT, Stop=nll, Layers=8, Hidden=256, Dropout=0.2, LR=5e-05)
+Patience=20 Loss: 383249.6855 【RMSE】: 【6.4794】 MAE: 0.8644 MAPE: 0.8014 CPC: 0.6447 JSD: 0.1097
+	 	 (Param: MCM=True, Method=WT, Stop=nll, Layers=8, Hidden=256, Dropout=0.1, LR=0.01)
+Patience=20 Loss: 383249.6855 【RMSE】: 【6.4794】 MAE: 0.8644 MAPE: 0.8014 CPC: 0.6447 JSD: 0.1097
+	 	 (Param: MCM=True, Method=WT, Stop=nll, Layers=8, Hidden=256, Dropout=0.1, LR=0.005)
+Patience=20 Loss: 383249.6855 【RMSE】: 【6.4794】 MAE: 0.8644 MAPE: 0.8014 CPC: 0.6447 JSD: 0.1097
+	 	 (Param: MCM=True, Method=WT, Stop=nll, Layers=8, Hidden=256, Dropout=0.1, LR=0.0045)
+Patience=20 Loss: 383249.6855 【RMSE】: 【6.4794】 MAE: 0.8644 MAPE: 0.8014 CPC: 0.6447 JSD: 0.1097
+	 	 (Param: MCM=True, Method=WT, Stop=nll, Layers=8, Hidden=256, Dropout=0.1, LR=0.004)
+Patience=20 Loss: 389520.0859 【RMSE】: 【6.0610】 MAE: 0.8975 MAPE: 0.8820 CPC: 0.6591 JSD: 0.1138
+	 	 (Param: MCM=True, Method=WT, Stop=nll, Layers=8, Hidden=256, Dropout=0.1, LR=0.0035)
+Patience=20 Loss: 389520.0859 【RMSE】: 【6.0610】 MAE: 0.8975 MAPE: 0.8820 CPC: 0.6591 JSD: 0.1138
+	 	 (Param: MCM=True, Method=WT, Stop=nll, Layers=8, Hidden=256, Dropout=0.1, LR=0.003)
+Patience=20 Loss: 385253.4473 【RMSE】: 【6.6216】 MAE: 0.8988 MAPE: 0.8150 CPC: 0.6259 JSD: 0.1144
+	 	 (Param: MCM=True, Method=WT, Stop=nll, Layers=8, Hidden=256, Dropout=0.1, LR=0.0025)
+Patience=20 Loss: 386164.0469 【RMSE】: 【6.5882】 MAE: 0.9242 MAPE: 0.8558 CPC: 0.6254 JSD: 0.1168
+	 	 (Param: MCM=True, Method=WT, Stop=nll, Layers=8, Hidden=256, Dropout=0.1, LR=0.002)
+Patience=20 Loss: 385342.7070 【RMSE】: 【6.5082】 MAE: 0.8956 MAPE: 0.8254 CPC: 0.6360 JSD: 0.1133
+	 	 (Param: MCM=True, Method=WT, Stop=nll, Layers=8, Hidden=256, Dropout=0.1, LR=0.0015)
+Patience=20 Loss: 384941.2070 【RMSE】: 【6.5035】 MAE: 0.8985 MAPE: 0.8490 CPC: 0.6426 JSD: 0.1127
+	 	 (Param: MCM=True, Method=WT, Stop=nll, Layers=8, Hidden=256, Dropout=0.1, LR=0.001)
+Patience=20 Loss: 383917.9688 【RMSE】: 【6.0824】 MAE: 0.8928 MAPE: 0.8609 CPC: 0.6669 JSD: 0.1075
+	 	 (Param: MCM=True, Method=WT, Stop=nll, Layers=8, Hidden=256, Dropout=0.1, LR=0.0005)
+Patience=20 Loss: 383826.1992 【RMSE】: 【6.3577】 MAE: 0.9309 MAPE: 0.8833 CPC: 0.6568 JSD: 0.1105
+	 	 (Param: MCM=True, Method=WT, Stop=nll, Layers=8, Hidden=256, Dropout=0.1, LR=0.0004)
+Patience=20 Loss: 383100.5957 【RMSE】: 【5.9928】 MAE: 0.8672 MAPE: 0.8290 CPC: 0.6617 JSD: 0.1083
+	 	 (Param: MCM=True, Method=WT, Stop=nll, Layers=8, Hidden=256, Dropout=0.1, LR=0.0003)
+Patience=20 Loss: 383705.8379 【RMSE】: 【6.1753】 MAE: 0.9154 MAPE: 0.8903 CPC: 0.6565 JSD: 0.1110
+	 	 (Param: MCM=True, Method=WT, Stop=nll, Layers=8, Hidden=256, Dropout=0.1, LR=0.0002)
+Patience=20 Loss: 383275.1367 【RMSE】: 【5.9714】 MAE: 0.8455 MAPE: 0.8306 CPC: 0.6727 JSD: 0.1066
+	 	 (Param: MCM=True, Method=WT, Stop=nll, Layers=8, Hidden=256, Dropout=0.1, LR=0.0001)
+Patience=20 Loss: 383020.3008 【RMSE】: 【6.1821】 MAE: 0.8606 MAPE: 0.8351 CPC: 0.6614 JSD: 0.1095
+	 	 (Param: MCM=True, Method=WT, Stop=nll, Layers=8, Hidden=256, Dropout=0.1, LR=5e-05)
+Patience=20 Loss: 382932.2188 【RMSE】: 【6.2246】 MAE: 0.8558 MAPE: 0.8252 CPC: 0.6599 JSD: 0.1091
+	 	 (Param: MCM=True, Method=WT, Stop=nll, Layers=8, Hidden=256, Dropout=0.0, LR=0.01)
+Patience=20 Loss: 382932.2188 【RMSE】: 【6.2246】 MAE: 0.8558 MAPE: 0.8252 CPC: 0.6599 JSD: 0.1091
+	 	 (Param: MCM=True, Method=WT, Stop=nll, Layers=8, Hidden=256, Dropout=0.0, LR=0.005)
+Patience=20 Loss: 386885.2852 【RMSE】: 【6.9180】 MAE: 0.9355 MAPE: 0.8524 CPC: 0.6192 JSD: 0.1114
+	 	 (Param: MCM=True, Method=WT, Stop=nll, Layers=8, Hidden=256, Dropout=0.0, LR=0.0045)
+Patience=20 Loss: 388780.1719 【RMSE】: 【6.4178】 MAE: 0.8931 MAPE: 0.7977 CPC: 0.6374 JSD: 0.1114
+	 	 (Param: MCM=True, Method=WT, Stop=nll, Layers=8, Hidden=256, Dropout=0.0, LR=0.004)
+Patience=20 Loss: 388780.1719 【RMSE】: 【6.4178】 MAE: 0.8931 MAPE: 0.7977 CPC: 0.6374 JSD: 0.1114
+	 	 (Param: MCM=True, Method=WT, Stop=nll, Layers=8, Hidden=256, Dropout=0.0, LR=0.0035)
+Patience=20 Loss: 387925.2422 【RMSE】: 【7.1190】 MAE: 0.8791 MAPE: 0.7355 CPC: 0.6215 JSD: 0.1081
+	 	 (Param: MCM=True, Method=WT, Stop=nll, Layers=8, Hidden=256, Dropout=0.0, LR=0.003)
+Patience=20 Loss: 387925.2422 【RMSE】: 【7.1190】 MAE: 0.8791 MAPE: 0.7355 CPC: 0.6215 JSD: 0.1081
+	 	 (Param: MCM=True, Method=WT, Stop=nll, Layers=8, Hidden=256, Dropout=0.0, LR=0.0025)
+Patience=20 Loss: 386019.1035 【RMSE】: 【5.9720】 MAE: 0.8699 MAPE: 0.8165 CPC: 0.6622 JSD: 0.1080
+	 	 (Param: MCM=True, Method=WT, Stop=nll, Layers=8, Hidden=256, Dropout=0.0, LR=0.002)
+Patience=20 Loss: 386171.7578 【RMSE】: 【7.1325】 MAE: 0.9288 MAPE: 0.8428 CPC: 0.6242 JSD: 0.1155
+	 	 (Param: MCM=True, Method=WT, Stop=nll, Layers=8, Hidden=256, Dropout=0.0, LR=0.0015)
+Patience=20 Loss: 385551.4648 【RMSE】: 【6.6057】 MAE: 0.8463 MAPE: 0.7517 CPC: 0.6446 JSD: 0.1045
+	 	 (Param: MCM=True, Method=WT, Stop=nll, Layers=8, Hidden=256, Dropout=0.0, LR=0.001)
+Patience=20 Loss: 386377.0391 【RMSE】: 【6.5941】 MAE: 0.8705 MAPE: 0.7872 CPC: 0.6468 JSD: 0.1106
+	 	 (Param: MCM=True, Method=WT, Stop=nll, Layers=8, Hidden=256, Dropout=0.0, LR=0.0005)
+Patience=20 Loss: 384069.4570 【RMSE】: 【6.1770】 MAE: 0.8417 MAPE: 0.7723 CPC: 0.6566 JSD: 0.1069
+	 	 (Param: MCM=True, Method=WT, Stop=nll, Layers=8, Hidden=256, Dropout=0.0, LR=0.0004)
+Patience=20 Loss: 383482.8789 【RMSE】: 【6.1559】 MAE: 0.8457 MAPE: 0.7845 CPC: 0.6588 JSD: 0.1087
+	 	 (Param: MCM=True, Method=WT, Stop=nll, Layers=8, Hidden=256, Dropout=0.0, LR=0.0003)
+Patience=20 Loss: 383838.7988 【RMSE】: 【6.1870】 MAE: 0.8880 MAPE: 0.8471 CPC: 0.6616 JSD: 0.1089
+	 	 (Param: MCM=True, Method=WT, Stop=nll, Layers=8, Hidden=256, Dropout=0.0, LR=0.0002)
+Patience=20 Loss: 384795.3105 【RMSE】: 【6.0430】 MAE: 0.8517 MAPE: 0.8236 CPC: 0.6633 JSD: 0.1069
+	 	 (Param: MCM=True, Method=WT, Stop=nll, Layers=8, Hidden=256, Dropout=0.0, LR=0.0001)
+Patience=20 Loss: 384371.4492 【RMSE】: 【7.1869】 MAE: 0.8833 MAPE: 0.7722 CPC: 0.6293 JSD: 0.1096
+	 	 (Param: MCM=True, Method=WT, Stop=nll, Layers=8, Hidden=256, Dropout=0.0, LR=5e-05)
+Patience=20 Loss: 384629.1992 【RMSE】: 【6.5789】 MAE: 0.8563 MAPE: 0.7907 CPC: 0.6509 JSD: 0.1076
