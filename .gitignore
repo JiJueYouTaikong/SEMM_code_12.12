@@ -1,15 +1,7 @@
-# 忽略数据集
-data/
-*.csv
+./data/t_bd_od.csv
 *.h5
-*.html
 *.zip
 # 忽略模型 checkpoint
-*.ckpt
-*.pth
-*.pt
-*.npz
-*.npy
 *.pkl
 # 忽略结果输出
 outputs/
