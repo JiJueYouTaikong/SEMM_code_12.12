@@ -1,10 +1,4 @@
 data/OD_完整批处理_3.17_Final_MCM_180_43.npy
-data/仿真_真实_总OD矩阵_V1.3_60days.npy
-data/仿真_真实_总OD矩阵_V1.0_25.2.18.npy
-data/仿真_真实_总OD矩阵_V1.1_25.2.26.npy
-data/仿真_真实_总OD矩阵_V1.2_25.2.26.npy
-File data/OD_完整批处理_3.17_Final_MCM_60.npy
-data/OD_完整批处理_3.17_Final_MCM_180_43.npy
 data/OD_完整批处理_3.17_Final_MCM_60.npy
 data/t_bd_od.csv
 data/仿真_真实_总OD矩阵_V1.0_25.2.18.npy
@@ -12,3 +6,8 @@ data/仿真_真实_总OD矩阵_V1.1_25.2.26.npy
 data/仿真_真实_总OD矩阵_V1.2_25.2.26.npy
 data/仿真_真实_总OD矩阵_V1.3_60days.npy
 OVS/data/仿真_真实_总OD矩阵_V1.3_60days.npy
+
+*.log
+*.pth
+*.pt
+*.txt
