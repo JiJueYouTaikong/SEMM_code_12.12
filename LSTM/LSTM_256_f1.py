@@ -68,9 +68,12 @@ def load_data():
     set_seed(42)
 
     # 加载数据
-    data = np.load('../LSTM/data/武汉速度数据集_1KM_110区域_25.1.14.npy')  # 形状 [T, N, 2]
-    speed = data[:, :, 0]  # 平均速度 [T, N]
-    od = np.load('../LSTM/data/武汉OD数据集_1KM_110区域_过滤cnt_对角线0_25.1.14.npy')  # 形状 [T, N, N]
+    # data = np.load('../LSTM/data/武汉速度数据集_1KM_110区域_25.1.14.npy')  # 形状 [T, N, 2]
+    # speed = data[:, :, 0]  # 平均速度 [T, N]
+    # od = np.load('../LSTM/data/武汉OD数据集_1KM_110区域_过滤cnt_对角线0_25.1.14.npy')  # 形状 [T, N, N]
+    speed = np.load('../data/Speed_完整批处理_3.17_Final.npy')
+    od = np.load('../data/OD_完整批处理_3.17_Final.npy')
+
 
     # 设置均值和标准差
     mean = 0.05
@@ -195,6 +198,9 @@ def load_data():
     return train_loader, val_loader, test_loader
 
 
+
+log_filename = f"log/A完整批处理的调参_3.17.log"
+
 def train_model(model, train_loader, val_loader, epochs=100, patience=10, learning_rate=0.001, hidden_size=0, load=0):
     if load == 1:
         model.load_state_dict(torch.load('ckpt/hidden256/best_model_1种特征_hidden256_25.1.14版本数据集.pth'))
@@ -204,7 +210,8 @@ def train_model(model, train_loader, val_loader, epochs=100, patience=10, learni
     learning_rate = learning_rate
     epochs = epochs
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-
+    model.to(device)
+    print(device)
     criterion = nn.MSELoss()
     optimizer = optim.Adam(model.parameters(), lr=learning_rate)
 
@@ -220,12 +227,12 @@ def train_model(model, train_loader, val_loader, epochs=100, patience=10, learni
     patience = patience  # 允许验证损失没有改善的周期数
     early_stop_counter = 0  # 计数器
 
-    # 4. 设置日志记录
-    logging.basicConfig(filename='log/training_4种特征_hidden512_mlp_25年2月17重新调参_25.1.14版本数据集.log',
-                        level=logging.INFO,
-                        format='%(asctime)s - %(message)s')
-    logging.info("-----------------------Starting training-------------------------")
-    logging.info(f"learning rate: {learning_rate}")
+    # # 4. 设置日志记录
+    # logging.basicConfig(filename='log/training_4种特征_hidden512_mlp_25年2月17重新调参_25.1.14版本数据集.log',
+    #                     level=logging.INFO,
+    #                     format='%(asctime)s - %(message)s')
+    # logging.info("-----------------------Starting training-------------------------")
+    # logging.info(f"learning rate: {learning_rate}")
 
     # # # 5. 训练过程
     # model.load_state_dict(torch.load('ckpt/best_model_频域.pth'))
@@ -236,6 +243,7 @@ def train_model(model, train_loader, val_loader, epochs=100, patience=10, learni
         running_loss = 0.0
         for inputs, targets in train_loader:
             # print(f"Input shape: {inputs.shape}, Target shape: {targets.shape}")
+            inputs, targets = inputs.to(device), targets.to(device)
             optimizer.zero_grad()
             outputs = model(inputs)
             # print(f"Output shape: {outputs.shape}")
@@ -249,6 +257,7 @@ def train_model(model, train_loader, val_loader, epochs=100, patience=10, learni
         val_loss = 0.0
         with torch.no_grad():
             for inputs, targets in val_loader:
+                inputs, targets = inputs.to(device), targets.to(device)
                 outputs = model(inputs)
                 loss = criterion(outputs, targets.view(targets.size(0), targets.size(1), -1))  # 扁平化目标
                 val_loss += loss.item()
@@ -280,15 +289,15 @@ def train_model(model, train_loader, val_loader, epochs=100, patience=10, learni
 
     iters = len(val_losses)
 
-    # 6. 可视化训练和验证损失曲线
-    plt.figure(figsize=(10, 6))
-    plt.plot(range(1, iters + 1), train_losses, label='Training Loss')
-    plt.plot(range(1, iters + 1), val_losses, label='Validation Loss')
-    plt.xlabel('Epochs')
-    plt.ylabel('Loss')
-    plt.legend()
-    plt.title(f'Training and Validation Loss with lr={learning_rate}')
-    plt.show()
+    # # 6. 可视化训练和验证损失曲线
+    # plt.figure(figsize=(10, 6))
+    # plt.plot(range(1, iters + 1), train_losses, label='Training Loss')
+    # plt.plot(range(1, iters + 1), val_losses, label='Validation Loss')
+    # plt.xlabel('Epochs')
+    # plt.ylabel('Loss')
+    # plt.legend()
+    # plt.title(f'Training and Validation Loss with lr={learning_rate}')
+    # plt.show()
 
 
 def calculate_rmse_mae(predictions, targets):
@@ -311,6 +320,7 @@ def test_model(model, test_loader, learning_rate):
     total_rmse = 0.0
     total_mae = 0.0
     test_loss = 0.0
+    total_mape = 0
 
     all_real_od = []
     all_pred_od = []
@@ -323,7 +333,7 @@ def test_model(model, test_loader, learning_rate):
 
     with torch.no_grad():
         for inputs, targets in test_loader:
-            inputs, targets = inputs.to(device), targets.view(targets.size(0), targets.size(1), -1).to(device)
+            inputs, targets = inputs.to(device), targets.to(device)
             outputs = model(inputs)  # B,T,N*N
 
             outputs = outputs.view(-1, 110, 110)  # 恢复为 [batch*T, 110, 110] 的矩阵
@@ -336,10 +346,10 @@ def test_model(model, test_loader, learning_rate):
                 mask[:, i, i] = 0  # 对角线上的元素设为 0
 
             # 计算 RMSE 和 MAE
-            rmse = torch.sqrt(((outputs * mask - targets) ** 2).mean()).item()
-            mae = (torch.abs(outputs * mask - targets)).mean().item()
+            rmse, mae, mape = calculate_rmse_mae(outputs * mask, targets)
             total_rmse += rmse
             total_mae += mae
+            total_mape += mape
 
             loss = criterion(outputs, targets)
             test_loss += loss.item()
@@ -347,14 +357,15 @@ def test_model(model, test_loader, learning_rate):
             all_real_od.append(targets.cpu().numpy())
             all_pred_od.append(outputs.cpu().numpy())
 
-            # 累计真实和预测的 OD 矩阵
-            real_od_sum += targets.sum(dim=0)  # 按 batch 累加
-            predicted_od_sum += outputs.sum(dim=0)
-            total_samples += inputs.size(0)
+            # # 累计真实和预测的 OD 矩阵
+            # real_od_sum += targets.cpu().numpy()  # 按 batch 累加
+            # predicted_od_sum += outputs.cpu().numpy()
+            # total_samples += inputs.size(0)
 
     # 计算最终的 RMSE 和 MAE
     rmse = total_rmse / len(test_loader)
     mae = total_mae / len(test_loader)
+    mape = total_mape / len(test_loader)
     test_loss = test_loss / len(test_loader)
 
     all_real_od_t = np.concatenate(all_real_od, axis=0)
@@ -363,24 +374,24 @@ def test_model(model, test_loader, learning_rate):
     all_pred_od = np.mean(all_pred_od_t, axis=0)
 
     # 打印结果
-    print(f'Test RMSE: {rmse:.4f}, Test MAE: {mae:.4f}')
-    logging.info(f"learning rate: {learning_rate}")
-    logging.info(f'Test RMSE: {rmse}, Test MAE: {mae}')
+    print(f"Test Loss:{test_loss}")
+    print(f'Test RMSE: {rmse:.4f}, Test MAE: {mae:.4f} Test MAPE: {mape:.4f}')
+
     torch.save(model.state_dict(),
                f'ckpt/hidden256/best_model_1种特征_hidden256_25.1.14版本数据集_{rmse:.4f}_{mae:.4f}_lr_{learning_rate}.pth')
 
-    T = 1
-    # 计算平均真实 OD 和预测 OD
-    true_max = all_real_od_t.max()
-    pred_max = all_pred_od_t.max()
-    print(f"true max: {true_max}, predicted max: {pred_max}")
-    T = 1
-    # 计算平均真实 OD 和预测 OD
-    real_od_avg = real_od_sum / (total_samples * T)
-    real_od_avg = real_od_avg.cpu().numpy()
-
-    predicted_od_avg = predicted_od_sum / (total_samples * T)
-    predicted_od_avg = predicted_od_avg.cpu().numpy()
+    # T = 1
+    # # 计算平均真实 OD 和预测 OD
+    # true_max = all_real_od_t.max()
+    # pred_max = all_pred_od_t.max()
+    # print(f"true max: {true_max}, predicted max: {pred_max}")
+    # T = 1
+    # # 计算平均真实 OD 和预测 OD
+    # real_od_avg = real_od_sum / (total_samples * T)
+    # real_od_avg = real_od_avg.cpu().numpy()
+    #
+    # predicted_od_avg = predicted_od_sum / (total_samples * T)
+    # predicted_od_avg = predicted_od_avg.cpu().numpy()
 
     # 绘制线性拟合
     # 计算拟合线
@@ -419,9 +430,9 @@ def test_model(model, test_loader, learning_rate):
         print(np.round(all_pred_od_t[i, 60:68, 60:68].astype(np.float32), 1))  # 保留小数点后1位
 
     print("-------------------平均时间步上---------------------")
-    print(real_od_avg[60:68, 60:68].astype(int))  # 保留小数点后1位
+    print(all_real_od[60:68, 60:68].astype(int))  # 保留小数点后1位
     print("----------------------------------------------------")
-    print(predicted_od_avg[60:68, 60:68].astype(int))  # 保留小数点后1位
+    print(all_pred_od[60:68, 60:68].astype(int))  # 保留小数点后1位
 
     # print("-------------------平均时间步上---------------------")
     # print(np.round(real_od_avg[60:68, 60:68].astype(np.float32), 1))  # 保留小数点后1位
@@ -443,62 +454,90 @@ def test_model(model, test_loader, learning_rate):
     # sub_pred_2 = predicted_od_avg[start2:end2, start2:end2]
 
     # 统一量纲范围
-    vmin = min(real_od_avg.min(), predicted_od_avg.min())
-    vmax = max(real_od_avg.max(), predicted_od_avg.max())
+    vmin = min(all_real_od.min(), all_pred_od.min())
+    vmax = max(all_real_od.max(), all_pred_od.max())
     # print(f"real max:{real_od_avg.max()}, real min:{real_od_avg.min()}")
     # print(f"pred max:{predicted_od_avg.max()}, pred min:{predicted_od_avg.min()}")
     # print(f"max: {vmax}, min: {vmin}")
 
-    # 绘制热力图
-    plt.figure(figsize=(18, 8))
+    # # 绘制热力图
+    # plt.figure(figsize=(18, 8))
+    #
+    # # 前两个图展示 0-55 序号的真实和预测 OD 矩阵
+    # plt.subplot(1, 2, 1)
+    # sns.heatmap(all_real_od, cmap=style, cbar=True, vmin=vmin, vmax=vmax)
+    # plt.title('Real OD Heatmap')
+    #
+    # plt.subplot(1, 2, 2)
+    # sns.heatmap(all_pred_od, cmap=style, cbar=True, vmin=vmin, vmax=vmax)
+    # plt.title('Predicted OD Heatmap')
+    #
+    # plt.tight_layout()
+    # # plt.show()
+    #
+    # # 绘制热力图
+    # plt.figure(figsize=(18, 8))
+    #
+    # # 前两个图展示 0-55 序号的真实和预测 OD 矩阵
+    # plt.subplot(1, 2, 1)
+    # sns.heatmap(all_real_od[35:68, 35:68], cmap=style, cbar=True, vmin=vmin, vmax=vmax)
+    # plt.title('Real OD Heatmap')
+    #
+    # plt.subplot(1, 2, 2)
+    # sns.heatmap(all_pred_od[35:68, 35:68], cmap=style, cbar=True, vmin=vmin, vmax=vmax)
+    # plt.title('Predicted OD Heatmap')
+    #
+    # plt.tight_layout()
+    # # plt.show()
 
-    # 前两个图展示 0-55 序号的真实和预测 OD 矩阵
-    plt.subplot(1, 2, 1)
-    sns.heatmap(real_od_avg, cmap=style, cbar=True, vmin=vmin, vmax=vmax)
-    plt.title('Real OD Heatmap')
+    print(f"Test Loss:{test_loss:.4f}")
+    print(f'Test RMSE: {rmse:.4f}, Test MAE: {mae:.4f} Test MAPE: {mape:.4f}')
 
-    plt.subplot(1, 2, 2)
-    sns.heatmap(predicted_od_avg, cmap=style, cbar=True, vmin=vmin, vmax=vmax)
-    plt.title('Predicted OD Heatmap')
+    with open(log_filename, 'a') as log_file:
+        log_file.write(
+            f"Lr = {learning_rate},Test Loss: {test_loss:.4f} RMSE: {rmse:.4f} MAE: {mae:.4f} MAPE: {mape:.4f}\n")
 
-    plt.tight_layout()
-    # plt.show()
-
-    # 绘制热力图
-    plt.figure(figsize=(18, 8))
-
-    # 前两个图展示 0-55 序号的真实和预测 OD 矩阵
-    plt.subplot(1, 2, 1)
-    sns.heatmap(real_od_avg[35:68, 35:68], cmap=style, cbar=True, vmin=vmin, vmax=vmax)
-    plt.title('Real OD Heatmap')
-
-    plt.subplot(1, 2, 2)
-    sns.heatmap(predicted_od_avg[35:68, 35:68], cmap=style, cbar=True, vmin=vmin, vmax=vmax)
-    plt.title('Predicted OD Heatmap')
-
-    plt.tight_layout()
-    # plt.show()
-    print(f"Test Loss:{test_loss}")
-    print(f'Test RMSE: {rmse:.4f}, Test MAE: {mae:.4f}')
 
 
 def calculate_rmse_mae(predictions, targets):
     mse = torch.mean((predictions - targets) ** 2)
     rmse = torch.sqrt(mse)
     mae = torch.mean(torch.abs(predictions - targets))
-    return rmse.item(), mae.item()
+
+    # 计算 MAPE，避免除以零
+    non_zero_mask = targets != 0
+    if non_zero_mask.sum() > 0:
+        mape = torch.mean(
+            torch.abs((predictions[non_zero_mask] - targets[non_zero_mask]) / targets[non_zero_mask]))
+    else:
+        mape = torch.tensor(0.0)
+    return rmse.item(), mae.item(), mape.item()
 
 
 def main():
-    train_loader, val_loader, test_loader = load_data()
 
-    model = LSTMModel(input_size=110, hidden_size=256, output_size=110 * 110, num_layers=2)
 
-    lr = 0.005 # best 0.005
-    train_model(model, train_loader, val_loader, epochs=2000, patience=20, learning_rate=lr, load=0)
 
-    # 测试模型
-    test_model(model, test_loader, learning_rate=lr)
+
+    # 定义学习率列表
+    # 定义学习率列表
+    lr_list = [0.01, 0.005, 0.004, 0.003, 0.002, 0.001,
+               0.0005, 0.0004, 0.0003, 0.0002, 0.0001, 0.00005, 0.00002, 0.00001]
+    # lr_list = [0.01] # best6.20
+
+    # 遍历学习率列表
+    for lr in lr_list:
+        print(f"当前学习率: {lr}")
+
+        train_loader, val_loader, test_loader = load_data()
+
+        model = LSTMModel(input_size=110, hidden_size=256, output_size=110 * 110, num_layers=2)
+
+        # 训练模型
+        train_model(model, train_loader, val_loader, epochs=2000, patience=20, learning_rate=lr, load=0)
+
+        # 测试模型
+        test_model(model, test_loader, learning_rate=lr)
 
 
 if __name__ == "__main__":
