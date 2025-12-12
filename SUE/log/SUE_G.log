@@ -1,2 +1,0 @@
-Samples: 3, Epochs: 3, Lr: 40, Tol: 0.01, Test Loss: 15.6627 RMSE: 3.6496 MAE: 0.5446 MAPE: 0.7176
-Samples: 3, Epochs: 10, Lr: 40, Tol: 0.01, Test Loss: 7.4693 RMSE: 3.5762 MAE: 0.5372 MAPE: 0.7246
