@@ -1,0 +1,9 @@
+Lr = 0.02,patience = 20,Test Loss: 43.3602 RMSE: 6.3948 MAE: 1.1629 MAPE: 1.0159
+Lr = 0.02,patience = 30,Test Loss: 36.5809 RMSE: 5.7807 MAE: 0.9949 MAPE: 0.8400
+Lr = 0.02,patience = 30,Test Loss: 36.5809 RMSE: 5.7807 MAE: 0.9949 MAPE: 0.8400
+Lr = 0.02,patience = 30,Test Loss: 36.5809 RMSE: 5.7807 MAE: 0.9949 MAPE: 0.8400
+Lr = 0.02,patience = 30,Test Loss: 36.5809 RMSE: 5.7807 MAE: 0.9949 MAPE: 0.8400
+Lr = 0.02,patience = 30,Test Loss: 36.5809 RMSE: 5.7807 MAE: 0.9949 MAPE: 0.8400
+Lr = 0.02,patience = 30,Test Loss: 36.5809 RMSE: 5.7807 MAE: 0.9949 MAPE: 0.8400
+Lr = 0.03,patience = 30,Test Loss: 41.4633 RMSE: 6.1818 MAE: 1.1025 MAPE: 0.9072
+Lr = 0.03,patience = 20,Test Loss: 42.2848 RMSE: 6.2746 MAE: 1.1069 MAPE: 0.9019

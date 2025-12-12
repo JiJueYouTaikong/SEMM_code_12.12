@@ -1,0 +1,2 @@
+Samples: 1, MaxIter: None, Tol: 0.4, Test Loss: 1300.3621 RMSE: 3.8494 MAE: 0.6177 MAPE: 1.0671, Times: 68.88866190910339
+Samples: 1, MaxIter: None, Tol: 0.4, Test Loss: 3169.1539 RMSE: 4.8727 MAE: 0.7236 MAPE: 1.3364, Times: 16.8660325050354

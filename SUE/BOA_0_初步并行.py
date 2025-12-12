@@ -7,6 +7,7 @@ from sklearn.linear_model import BayesianRidge
 from joblib import Parallel, delayed
 import os
 import logging
+
 import functools
 print = functools.partial(print, flush=True)
 
@@ -134,7 +135,7 @@ def dynamic_OD_estimation(n_initial=5, max_iter=10):
 
     v_f = np.load("data/Link_flow_TL_3.19_可微.npy").astype(np.float32)
 
-    num_samples = 10  # 并行多个样本
+    num_samples = 10  # 改为并行多个样本
 
     true_od = true_od[-num_samples:]
     v_f = v_f[-num_samples:]

@@ -1,0 +1,57 @@
+Samples: 3, Epochs: 1000, Lr: 0.001, Tol: 0.1, Test Loss: 63289.5195 RMSE: 17066705.3333 MAE: 213776.6302 MAPE: 106303.3620, Time: 0.06 min
+Samples: 3, Epochs: 1000, Lr: 0.001, Tol: 0.1, Test Loss: 63289.5195 RMSE: 17066705.3333 MAE: 213776.6302 MAPE: 106303.3620, Time: 0.05 min
+Samples: 3, Epochs: 1000, Lr: 0.01, Tol: 0.1, Test Loss: 45638.0820 RMSE: 2592449.2917 MAE: 34108.1478 MAPE: 16396.0596, Time: 0.06 min
+Samples: 3, Epochs: 10000, Lr: 0.1, Tol: 0.1, Test Loss: 0.0998 RMSE: 16.0704 MAE: 1.3480 MAPE: 1.0655, Time: 0.14 min
+Samples: 3, Epochs: 10000, Lr: 1, Tol: 0.1, Test Loss: 0.0972 RMSE: 16.0641 MAE: 1.3471 MAPE: 1.0645, Time: 0.03 min
+Samples: 35, Epochs: 10000, Lr: 1, Tol: 0.1, Test Loss: 0.0975 RMSE: 20.7697 MAE: 1.9202 MAPE: 1.3355, Time: 0.17 min
+Samples: 35, Epochs: 10000, Lr: 1, Tol: 0.1, Test Loss: 0.0973 RMSE: 20.7674 MAE: 1.9199 MAPE: 1.3350, Time: 0.20 min
+Samples: 35, Epochs: 10000, Lr: 1, Tol: 0.1, Test Loss: 0.0979 RMSE: 20.7536 MAE: 1.9181 MAPE: 1.3328, Time: 0.19 min
+Samples: 35, Epochs: 10000, Lr: 1, Tol: 0.1, Test Loss: 0.0979 RMSE: 20.7536 MAE: 1.9181 MAPE: 1.3328, Time: 0.17 min
+Samples: 35, Epochs: 10000, Lr: 1, Tol: 0.1, Test Loss: 0.0979 RMSE: 20.7536 MAE: 1.9181 MAPE: 1.3328, Time: 0.19 min
+Samples: 35, Epochs: 10000, Lr: 0.1, Tol: 0.1, Test Loss: 0.0998 RMSE: 20.7536 MAE: 1.9181 MAPE: 1.3329, Time: 1.69 min
+Samples: 35, Epochs: 10000, Lr: 1, Tol: 0.1, Test Loss: 1.7770 RMSE: 29035283.7897 MAE: 326449.8683 MAPE: 402667.4893, Time: 10.41 min
+Samples: 35, Epochs: 10000, Lr: 1, Tol: 0.1, Test Loss: 0.0979 RMSE: 20.7536 MAE: 1.9181 MAPE: 1.3328, Time: 0.18 min
+Samples: 35, Epochs: 20000, Lr: 0.01, Tol: 0.01, Test Loss: 0.3190 RMSE: 20.8916 MAE: 1.9260 MAPE: 1.3391, Time: 41.00 min
+Samples: 35, Epochs: 0, Lr: 0.01, Tol: 0.01,  RMSE: 20.6248 MAE: 1.9223 MAPE: 1.3553, Time: 0.03 min
+Samples: 35, Epochs: 0, Lr: 0.01, Tol: 0.01,  RMSE: 19.7119 MAE: 1.9017 MAPE: 1.3288, Time: 0.03 min
+Samples: 35, Epochs: 0, Lr: 0.01, Tol: 0.01,  RMSE: 22.4626 MAE: 1.9648 MAPE: 1.4092, Time: 0.02 min
+Samples: 35, Epochs: 0, Lr: 0.01, Tol: 0.01,  RMSE: 19.2512 MAE: 1.8919 MAPE: 1.3136, Time: 0.03 min
+Samples: 35, Epochs: 0, Lr: 0.01, Tol: 0.01,  RMSE: 21.7964 MAE: 1.9501 MAPE: 1.3907, Time: 0.02 min
+Samples: 35, Epochs: 0, Lr: 0.01, Tol: 0.01,  RMSE: 21.7964 MAE: 1.9501 MAPE: 1.3907, Time: 0.03 min
+Samples: 35, Epochs: 20000, Lr: 0.1, Tol: 0.01,  RMSE: 20.7091 MAE: 1.9146 MAPE: 1.3368, Time: 4.70 min
+Samples: 35, Epochs: 20000, Lr: 0.1, Tol: 0.1,  RMSE: 21.5429 MAE: 2.0170 MAPE: 1.4870, Time: 3.16 min
+Samples: 35, Epochs: 20000, Lr: 0.1, Tol: 0.001,  RMSE: 20.7213 MAE: 1.9116 MAPE: 1.3314, Time: 5.91 min
+Samples: 35, Epochs: 20000, Lr: 0.1, Tol: 0.001,  RMSE: 20.7215 MAE: 1.9116 MAPE: 1.3314, Time: 5.94 min
+Samples: 35, Epochs: 20000, Lr: 0.1, Tol: 0.01,  RMSE: 20.7097 MAE: 1.9147 MAPE: 1.3368, Time: 4.67 min
+Samples: 35, Epochs: 20000, Lr: 0.1, Tol: 0.1,  RMSE: 21.5457 MAE: 2.0170 MAPE: 1.4870, Time: 3.33 min
+Samples: 35, Epochs: 0, Lr: 0.1, Tol: 0.1,  RMSE: 25.3617 MAE: 2.0271 MAPE: 1.4873, Time: 0.02 min
+Samples: 35, Epochs: 20000, Lr: 0.1, Tol: 0.1,  RMSE: 20.7697 MAE: 1.9203 MAPE: 1.3356, Time: 8.00 min
+Samples: 35, Epochs: 20000, Lr: 0.1, Tol: 0.01,  RMSE: 20.6772 MAE: 1.9109 MAPE: 1.3320, Time: 9.08 min
+Samples: 35, Epochs: 20000, Lr: 0.1, Tol: 0.001,  RMSE: 20.7078 MAE: 1.9113 MAPE: 1.3320, Time: 10.87 min
+Samples: 35, Epochs: 0, Lr: 0.1, Tol: 0.001,  RMSE: 20.6583 MAE: 1.9248 MAPE: 1.3575, Time: 0.04 min
+Samples: 35, Epochs: 0, Lr: 0.1, Tol: 0.001,  RMSE: 20.6583 MAE: 1.9248 MAPE: 1.3575, Time: 0.04 min
+Samples: 35, Epochs: 50000, Lr: 0.1, Tol: 1e-05,  RMSE: 20.7284 MAE: 1.9114 MAPE: 1.3308, Time: 8.67 min
+Samples: 35, Epochs: 50000, Lr: 0.1, Tol: 1e-05,  RMSE: 20.7284 MAE: 1.9113 MAPE: 1.3309, Time: 1.18 min
+Samples: 35, Epochs: 50000, Lr: 0.1, Tol: 1e-05,  RMSE: 20.7283 MAE: 1.9113 MAPE: 1.3309, Time: 1.24 min
+Samples: 35, Epochs: 50000, Lr: 0.1, Tol: 1e-09,  RMSE: 20.7292 MAE: 1.9113 MAPE: 1.3308, Time: 2.37 min
+Samples: 35, Epochs: 50000, Lr: 0.1, Tol: 0.001,  RMSE: 21.6824 MAE: 1.9479 MAPE: 1.3684, Time: 0.11 min
+Samples: 35, Epochs: 100000, Lr: 0.05, Tol: 0.001,  RMSE: 12.8795 MAE: 1.6479 MAPE: 0.9910, Time: 0.03 min
+Samples: 35, Epochs: 100000, Lr: 0.05, Tol: 0.001,  RMSE: 12.8920 MAE: 1.6484 MAPE: 0.9949, Time: 0.03 min
+Samples: 35, Epochs: 100000, Lr: 0.001, Tol: 1e-05,  RMSE: 12.8920 MAE: 1.6484 MAPE: 0.9950, Time: 1.04 min
+Samples: 35, Epochs: 100000, Lr: 0.001, Tol: 1e-05,  RMSE: 12.8920 MAE: 1.6484 MAPE: 0.9950, Time: 1.04 min
+Samples: 35, Epochs: 100000, Lr: 0.001, Tol: 1e-05,  RMSE: 12.8920 MAE: 1.6484 MAPE: 0.9950, Time: 1.06 min
+Samples: 35, Epochs: 100000, Lr: 0.001, Tol: 1e-05,  RMSE: 12.8897 MAE: 1.6481 MAPE: 0.9948, Time: 1.04 min
+Samples: 35, Epochs: 100000, Lr: 0.001, Tol: 1e-05,  RMSE: 6.7442 MAE: 1.0085 MAPE: 0.9351, Time: 0.65 min
+Samples: 35, Epochs: 100000, Lr: 0.001, Tol: 1e-05,  RMSE: 6.7442 MAE: 1.0085 MAPE: 0.9351, Time: 0.65 min
+Samples: 35, Epochs: 100000, Lr: 0.001, Tol: 0.1,  RMSE: 6.8660 MAE: 1.0325 MAPE: 0.9790, Time: 0.07 min
+Samples: 35, init_type:3 Epochs: 100000, Lr: 0.001, Tol: 0.1,  RMSE: 6.8660 MAE: 1.0325 MAPE: 0.9790, Time: 0.07 min
+Samples: 35, init_type:3 Epochs: 100000, Lr: 0.001, Tol: 0.1,  RMSE: 6.8660 MAE: 1.0325 MAPE: 0.9790 CPC:0.4555 JSD0.2276, Time: 0.10 min
+Samples: 35, init_type:3 Epochs: 100000, Lr: 0.001, Tol: 0.1,  RMSE: 6.8660 MAE: 1.0325 MAPE: 0.9790 CPC: 0.4555 JSD: 0.2276, Time: 0.09 min
+Samples: 35, init_type:3 Epochs: 100000, Lr: 0.001, Tol: 0.001,  RMSE: 6.7414 MAE: 1.0092 MAPE: 0.9342 CPC: 0.4599 JSD: 0.2273, Time: 0.36 min
+Samples: 35, init_type:3 Epochs: 100000, Lr: 0.001, Tol: 1e-05,  RMSE: 6.7442 MAE: 1.0085 MAPE: 0.9351 CPC: 0.4599 JSD: 0.2273, Time: 0.67 min
+Samples: 35, init_type:3 Epochs: 100000, Lr: 0.001, Tol: 0.1,  RMSE: 6.8583 MAE: 1.0315 MAPE: 0.9785 CPC: 0.4555 JSD: 0.2276, Time: 0.11 min
+Samples: 35, init_type:3 Epochs: 100000, Lr: 0.001, Tol: 0.001,  RMSE: 6.7411 MAE: 1.0091 MAPE: 0.9342 CPC: 0.4599 JSD: 0.2273, Time: 0.38 min
+Samples: 35, init_type:3 Epochs: 100000, Lr: 0.001, Tol: 1e-05,  RMSE: 6.7442 MAE: 1.0085 MAPE: 0.9351 CPC: 0.4599 JSD: 0.2273, Time: 0.72 min
+Samples: 35, init_type:3 Epochs: 100000, Lr: 0.001, Tol: 0.1,  RMSE: 6.8500 MAE: 1.0298 MAPE: 0.9774 CPC: 0.4555 JSD: 0.2276, Time: 0.11 min
+Samples: 35, init_type:3 Epochs: 100000, Lr: 0.001, Tol: 0.001,  RMSE: 6.7408 MAE: 1.0090 MAPE: 0.9341 CPC: 0.4599 JSD: 0.2273, Time: 0.37 min
+Samples: 35, init_type:3 Epochs: 100000, Lr: 0.001, Tol: 1e-05,  RMSE: 6.7442 MAE: 1.0085 MAPE: 0.9351 CPC: 0.4599 JSD: 0.2273, Time: 0.69 min

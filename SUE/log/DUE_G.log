@@ -1,0 +1,5 @@
+Samples: 35, Epochs: 1000, Lr: 40, Tol: 0.01, Test Loss: 6.5715 RMSE: 9.3518 MAE: 1.5078 MAPE: 1.3680
+Samples: 35, Epochs: 1000, Lr: 40, Tol: 0.01, Test Loss: 6.5715 RMSE: 9.3518 MAE: 1.5078 MAPE: 1.3680, Times: 198.46885650555294
+Samples: 35, Epochs: 10, Lr: 40, Tol: 0.01, Test Loss: 179.6332 RMSE: 9.4078 MAE: 1.4401 MAPE: 1.4611, Times: 2.710769975185394
+Samples: 35, Epochs: 100, Lr: 40, Tol: 0.01, Test Loss: 35.7389 RMSE: 9.6586 MAE: 1.6624 MAPE: 1.6761, Times: 27.519445780913035
+Samples: 35, Epochs: 10, Lr: 40, Tol: 0.01, Test Loss: 179.6332 RMSE: 9.4078 MAE: 1.4401 MAPE: 1.4611, Times: 3.570038978258769

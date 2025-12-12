@@ -27,7 +27,7 @@ od_sources = {
 # 地图中心坐标
 center_lat, center_lon = 30.4341, 114.5113
 # 图片尺寸和分辨率
-fig_size = (6, 15)
+fig_size = (15,8)
 dpi = 300
 
 # ---------- 加载数据 ----------
@@ -152,11 +152,11 @@ def plot_od_map(od_matrix, label, output_format='png'):
                 # 根据OD值设置样式
                 if od_value <= 5:
                     color = '#5e62a9'
-                    linewidth = 0.8
+                    linewidth = 1.3
                     alpha = 0.4
                 elif od_value <= 10:
                     color = '#fdffb6'
-                    linewidth = 1.2
+                    linewidth = 1.4
                     alpha = 0.75
                 else:
                     color = '#93002e'

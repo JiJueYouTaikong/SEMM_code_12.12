@@ -1,0 +1,222 @@
+nohup: ignoring input
+6.14
+--------------------------
+Processing sample 1/35
+真实OD:19785.00
+初始ODE:13698.00
+   Iteration     Total nfev        Cost      Cost reduction    Step norm     Optimality   
+       0              1         1.9854e+02                                    9.23e+00    
+       1              2         8.6281e+00      1.90e+02       4.97e+02       3.65e+00    
+The maximum number of function evaluations is exceeded.
+Function evaluations 2, initial cost 1.9854e+02, final cost 8.6281e+00, first-order optimality 3.65e+00.
+最终ODE:23813.03
+真实OD:19785.00
+样本0的RMSE:6.9285 MAE:1.4188 MAPE:1.2316
+--------------------------
+Processing sample 2/35
+真实OD:19961.00
+初始ODE:13698.00
+   Iteration     Total nfev        Cost      Cost reduction    Step norm     Optimality   
+       0              1         2.4065e+02                                    4.36e+01    
+       1              2         2.4099e+01      2.17e+02       5.09e+02       1.16e+01    
+The maximum number of function evaluations is exceeded.
+Function evaluations 2, initial cost 2.4065e+02, final cost 2.4099e+01, first-order optimality 1.16e+01.
+最终ODE:24029.08
+真实OD:19961.00
+样本1的RMSE:7.6334 MAE:1.5149 MAPE:1.2276
+--------------------------
+Processing sample 3/35
+真实OD:20047.00
+初始ODE:13698.00
+   Iteration     Total nfev        Cost      Cost reduction    Step norm     Optimality   
+       0              1         2.2298e+02                                    4.42e+01    
+       1              2         1.8498e+01      2.04e+02       5.32e+02       1.15e+01    
+The maximum number of function evaluations is exceeded.
+Function evaluations 2, initial cost 2.2298e+02, final cost 1.8498e+01, first-order optimality 1.15e+01.
+最终ODE:24385.43
+真实OD:20047.00
+样本2的RMSE:6.9476 MAE:1.5037 MAPE:1.2559
+--------------------------
+Processing sample 4/35
+真实OD:22427.00
+初始ODE:13698.00
+   Iteration     Total nfev        Cost      Cost reduction    Step norm     Optimality   
+       0              1         1.9828e+02                                    1.68e+00    
+       1              2         9.4705e-01      1.97e+02       5.71e+02       4.99e-01    
+The maximum number of function evaluations is exceeded.
+Function evaluations 2, initial cost 1.9828e+02, final cost 9.4705e-01, first-order optimality 4.99e-01.
+最终ODE:26468.89
+真实OD:22427.00
+样本3的RMSE:7.9417 MAE:1.7054 MAPE:1.3769
+--------------------------
+Processing sample 5/35
+真实OD:28656.00
+初始ODE:13698.00
+   Iteration     Total nfev        Cost      Cost reduction    Step norm     Optimality   
+       0              1         2.3390e+02                                    5.49e+00    
+       1              2         3.7415e+00      2.30e+02       7.79e+02       2.29e+00    
+The maximum number of function evaluations is exceeded.
+Function evaluations 2, initial cost 2.3390e+02, final cost 3.7415e+00, first-order optimality 2.29e+00.
+最终ODE:33673.73
+真实OD:28656.00
+样本4的RMSE:8.7111 MAE:2.0549 MAPE:1.3969
+--------------------------
+Processing sample 6/35
+真实OD:31481.00
+初始ODE:13698.00
+   Iteration     Total nfev        Cost      Cost reduction    Step norm     Optimality   
+       0              1         4.3227e+02                                    3.78e+02    
+       1              2         1.1195e+02      3.20e+02       9.56e+02       4.25e+01    
+The maximum number of function evaluations is exceeded.
+Function evaluations 2, initial cost 4.3227e+02, final cost 1.1195e+02, first-order optimality 4.25e+01.
+最终ODE:36510.01
+真实OD:31481.00
+样本5的RMSE:11.1431 MAE:2.2749 MAPE:1.4010
+--------------------------
+Processing sample 7/35
+真实OD:33395.00
+初始ODE:13698.00
+   Iteration     Total nfev        Cost      Cost reduction    Step norm     Optimality   
+       0              1         2.4272e+02                                    4.71e+00    
+       1              2         3.5321e+00      2.39e+02       1.15e+03       3.31e+00    
+The maximum number of function evaluations is exceeded.
+Function evaluations 2, initial cost 2.4272e+02, final cost 3.5321e+00, first-order optimality 3.31e+00.
+最终ODE:39051.98
+真实OD:33395.00
+样本6的RMSE:14.9767 MAE:2.5264 MAPE:1.5556
+--------------------------
+Processing sample 8/35
+真实OD:28654.00
+初始ODE:13698.00
+   Iteration     Total nfev        Cost      Cost reduction    Step norm     Optimality   
+       0              1         2.2494e+02                                    4.79e+00    
+       1              2         1.0207e+00      2.24e+02       9.25e+02       1.02e+00    
+The maximum number of function evaluations is exceeded.
+Function evaluations 2, initial cost 2.2494e+02, final cost 1.0207e+00, first-order optimality 1.02e+00.
+最终ODE:34141.10
+真实OD:28654.00
+样本7的RMSE:11.7212 MAE:2.1366 MAPE:1.5384
+--------------------------
+Processing sample 9/35
+真实OD:21309.00
+初始ODE:13698.00
+   Iteration     Total nfev        Cost      Cost reduction    Step norm     Optimality   
+       0              1         3.5987e+02                                    1.26e+02    
+       1              2         9.5260e+01      2.65e+02       5.82e+02       5.15e+01    
+The maximum number of function evaluations is exceeded.
+Function evaluations 2, initial cost 3.5987e+02, final cost 9.5260e+01, first-order optimality 5.15e+01.
+最终ODE:26172.43
+真实OD:21309.00
+样本8的RMSE:7.9146 MAE:1.5348 MAPE:1.3348
+--------------------------
+Processing sample 10/35
+真实OD:18897.00
+初始ODE:13698.00
+   Iteration     Total nfev        Cost      Cost reduction    Step norm     Optimality   
+       0              1         2.8683e+02                                    1.28e+02    
+       1              2         9.4920e+01      1.92e+02       9.48e+02       7.17e+01    
+The maximum number of function evaluations is exceeded.
+Function evaluations 2, initial cost 2.8683e+02, final cost 9.4920e+01, first-order optimality 7.17e+01.
+最终ODE:25361.55
+真实OD:18897.00
+样本9的RMSE:8.6108 MAE:1.3995 MAPE:1.2949
+--------------------------
+Processing sample 11/35
+真实OD:9150.00
+初始ODE:13698.00
+   Iteration     Total nfev        Cost      Cost reduction    Step norm     Optimality   
+       0              1         7.4200e+02                                    1.97e+03    
+       1              2         3.7333e+02      3.69e+02       3.48e+02       1.47e+02    
+The maximum number of function evaluations is exceeded.
+Function evaluations 2, initial cost 7.4200e+02, final cost 3.7333e+02, first-order optimality 1.47e+02.
+最终ODE:14656.54
+真实OD:9150.00
+样本10的RMSE:4.6553 MAE:0.9185 MAPE:1.4039
+--------------------------
+Processing sample 12/35
+真实OD:2492.00
+初始ODE:13698.00
+   Iteration     Total nfev        Cost      Cost reduction    Step norm     Optimality   
+       0              1         2.3611e+04                                    8.18e+02    
+       1              2         9.8897e+03      1.37e+04       5.21e+02       5.36e+02    
+The maximum number of function evaluations is exceeded.
+Function evaluations 2, initial cost 2.3611e+04, final cost 9.8897e+03, first-order optimality 5.36e+02.
+最终ODE:7750.35
+真实OD:2492.00
+样本11的RMSE:6.3630 MAE:0.8688 MAPE:2.2003
+--------------------------
+Processing sample 13/35
+真实OD:2302.00
+初始ODE:13698.00
+   Iteration     Total nfev        Cost      Cost reduction    Step norm     Optimality   
+       0              1         9.8378e+03                                    5.17e+02    
+       1              2         2.9497e+03      6.89e+03       5.43e+02       2.00e+02    
+The maximum number of function evaluations is exceeded.
+Function evaluations 2, initial cost 9.8378e+03, final cost 2.9497e+03, first-order optimality 2.00e+02.
+最终ODE:7396.34
+真实OD:2302.00
+样本12的RMSE:6.3380 MAE:0.8872 MAPE:2.4242
+--------------------------
+Processing sample 14/35
+真实OD:1841.00
+初始ODE:13698.00
+   Iteration     Total nfev        Cost      Cost reduction    Step norm     Optimality   
+       0              1         1.9623e+06                                    5.22e+04    
+       1              2         1.0028e+06      9.59e+05       4.47e+02       3.74e+04    
+The maximum number of function evaluations is exceeded.
+Function evaluations 2, initial cost 1.9623e+06, final cost 1.0028e+06, first-order optimality 3.74e+04.
+最终ODE:7403.17
+真实OD:1841.00
+样本13的RMSE:7.1519 MAE:0.9607 MAPE:2.5681
+--------------------------
+Processing sample 15/35
+真实OD:1618.00
+初始ODE:13698.00
+   Iteration     Total nfev        Cost      Cost reduction    Step norm     Optimality   
+       0              1         6.9979e+04                                    4.06e+03    
+       1              2         2.8910e+04      4.11e+04       5.46e+02       3.65e+03    
+The maximum number of function evaluations is exceeded.
+Function evaluations 2, initial cost 6.9979e+04, final cost 2.8910e+04, first-order optimality 3.65e+03.
+最终ODE:6870.91
+真实OD:1618.00
+样本14的RMSE:7.0623 MAE:0.9770 MAPE:3.2602
+--------------------------
+Processing sample 16/35
+真实OD:1985.00
+初始ODE:13698.00
+   Iteration     Total nfev        Cost      Cost reduction    Step norm     Optimality   
+       0              1         3.0879e+04                                    6.09e+03    
+       1              2         1.3815e+04      1.71e+04       5.48e+02       3.83e+03    
+The maximum number of function evaluations is exceeded.
+Function evaluations 2, initial cost 3.0879e+04, final cost 1.3815e+04, first-order optimality 3.83e+03.
+最终ODE:7331.42
+真实OD:1985.00
+样本15的RMSE:7.2022 MAE:0.9829 MAPE:2.8534
+--------------------------
+Processing sample 17/35
+真实OD:3421.00
+初始ODE:13698.00
+   Iteration     Total nfev        Cost      Cost reduction    Step norm     Optimality   
+       0              1         3.2224e+04                                    2.18e+03    
+       1              2         1.5922e+04      1.63e+04       5.19e+02       1.14e+03    
+The maximum number of function evaluations is exceeded.
+Function evaluations 2, initial cost 3.2224e+04, final cost 1.5922e+04, first-order optimality 1.14e+03.
+最终ODE:8989.28
+真实OD:3421.00
+样本16的RMSE:7.1556 MAE:1.0147 MAPE:2.3649
+--------------------------
+Processing sample 18/35
+真实OD:9416.00
+初始ODE:13698.00
+   Iteration     Total nfev        Cost      Cost reduction    Step norm     Optimality   
+       0              1         4.7615e+02                                    4.40e+01    
+       1              2         1.0291e+02      3.73e+02       4.07e+02       1.94e+01    
+The maximum number of function evaluations is exceeded.
+Function evaluations 2, initial cost 4.7615e+02, final cost 1.0291e+02, first-order optimality 1.94e+01.
+最终ODE:15138.83
+真实OD:9416.00
+样本17的RMSE:5.8067 MAE:1.0376 MAPE:1.4017
+--------------------------
+Processing sample 19/35
+真实OD:25568.00
+初始ODE:13698.00

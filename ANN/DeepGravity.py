@@ -290,6 +290,8 @@ def load_data(is_mcm=False):
     return train_loader, val_loader, test_loader,log_filename
 
 
+import time
+
 # 测试
 def test_model(model, test_loader,lr=0,log_filename=None):
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -309,6 +311,8 @@ def test_model(model, test_loader,lr=0,log_filename=None):
 
     all_real_od = []
     all_pred_od = []
+
+    start_time = time.time()
 
     with torch.no_grad():
         for data in test_loader:
@@ -337,6 +341,10 @@ def test_model(model, test_loader,lr=0,log_filename=None):
             all_real_od.append(targets.cpu().numpy())
             all_pred_od.append(outputs.cpu().numpy())
 
+    end_time = time.time()
+    infer_time = start_time - end_time
+
+
     test_loss /= len(test_loader)
     rmse_total /= len(test_loader)
     mae_total /= len(test_loader)
@@ -352,7 +360,7 @@ def test_model(model, test_loader,lr=0,log_filename=None):
 
     with open(log_filename, 'a') as log_file:
         log_file.write(
-            f"Lr = {lr},Test Loss: {test_loss:.4f} RMSE: {rmse_total:.4f} MAE: {mae_total:.4f} MAPE: {mape_total:.4f} CPC:{cpc_total:.4f} JSD:{jsd_total:.4f}\n")
+            f"Lr = {lr},Test Loss: {test_loss:.4f} RMSE: {rmse_total:.4f} MAE: {mae_total:.4f} MAPE: {mape_total:.4f} CPC:{cpc_total:.4f} JSD:{jsd_total:.4f} Infer time:{infer_time}s\n")
 
 
 # 主程序

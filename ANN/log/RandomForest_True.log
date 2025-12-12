@@ -1,0 +1,82 @@
+网格搜索完成！共尝试 24 种参数组合
+
+最佳参数: {'n_estimators': 50, 'max_depth': 10, 'min_samples_leaf': 10, 'n_jobs': -1, 'random_state': 42}
+
+最佳验证集MSE: 34.2389
+
+=== 训练参数 ===
+{'n_estimators': 50, 'max_depth': 10, 'min_samples_leaf': 10, 'n_jobs': -1, 'random_state': 42}
+
+Validation MSE: 34.2389
+
+=== 测试集评估结果 ===
+Test RMSE: 7.6027
+Test MAE:  1.0673
+Test MAPE: 0.8158
+Test CPC:  0.6260
+Test JSD:  0.1227
+网格搜索完成！共尝试 1 种参数组合
+
+最佳参数: {'n_estimators': 50, 'max_depth': 15, 'min_samples_leaf': 10, 'n_jobs': -1, 'random_state': 42}
+
+最佳验证集MSE: 34.1991
+
+=== 训练参数 ===
+{'n_estimators': 50, 'max_depth': 15, 'min_samples_leaf': 10, 'n_jobs': -1, 'random_state': 42}
+
+Validation MSE: 34.1991
+
+=== 测试集评估结果 ===
+Test RMSE: 7.6063
+Test MAE:  1.0678
+Test MAPE: 0.8163
+Test CPC:  0.6259
+Test JSD:  0.1227
+
+
+===== 开始运行 is_mcm=True 时间: 2025-12-02 09:09:35.009558 =====
+使用直接指定的最佳参数（不网格搜索）: {'n_estimators': 50, 'max_depth': 15, 'min_samples_leaf': 10, 'n_jobs': -1, 'random_state': 42}
+=== 训练参数 ===
+{'n_estimators': 50, 'max_depth': 15, 'min_samples_leaf': 10, 'n_jobs': -1, 'random_state': 42}
+
+Validation MSE: 34.1991
+
+=== 测试集评估结果 ===
+Test RMSE: 7.6063
+Test MAE:  1.0678
+Test MAPE: 0.8163
+Test CPC:  0.6259
+Test JSD:  0.1227
+Saved predictions -> predictions_is_mcm_True_20251202_091000.npy
+
+
+===== 开始运行 is_mcm=True 时间: 2025-12-02 09:19:33.187651 =====
+使用直接指定的最佳参数（不网格搜索）: {'n_estimators': 50, 'max_depth': 15, 'min_samples_leaf': 10, 'n_jobs': -1, 'random_state': 42}
+=== 训练参数 ===
+{'n_estimators': 50, 'max_depth': 15, 'min_samples_leaf': 10, 'n_jobs': -1, 'random_state': 42}
+
+Validation MSE: 34.1991
+
+=== 测试集评估结果 ===
+Test RMSE: 7.6063
+Test MAE:  1.0678
+Test MAPE: 0.8163
+Test CPC:  0.6259
+Test JSD:  0.1227
+Saved predictions -> predictions_is_mcm_True_20251202_091959.npy
+
+
+===== 开始运行 is_mcm=True 时间: 2025-12-02 09:20:45.125895 =====
+使用直接指定的最佳参数（不网格搜索）: {'n_estimators': 50, 'max_depth': 15, 'min_samples_leaf': 10, 'n_jobs': -1, 'random_state': 42}
+=== 训练参数 ===
+{'n_estimators': 50, 'max_depth': 15, 'min_samples_leaf': 10, 'n_jobs': -1, 'random_state': 42}
+
+Validation MSE: 34.1991
+
+=== 测试集评估结果 ===
+Test RMSE: 7.6063
+Test MAE:  1.0678
+Test MAPE: 0.8163
+Test CPC:  0.6259
+Test JSD:  0.1227
+Saved predictions -> predictions_is_mcm_True_20251202_092110.npy

@@ -64,7 +64,6 @@ def propose_location(gp, bounds, P, v_f, r, phi_hat):
     phi_hat = np.maximum(phi_hat, 10.0)
     dim = bounds.shape[0]
     best_x, best_acq = None, np.inf
-
     for i in range(2):
         print(f"采样次数:{i}",flush=True)
         x0 = np.random.uniform(bounds[:, 0], bounds[:, 1], size=dim)

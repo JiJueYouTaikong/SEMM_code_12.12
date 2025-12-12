@@ -325,7 +325,7 @@ def load_data(is_mcm):
 
     return train_loader, val_loader, test_loader,log_filename
 
-
+import time 
 # 测试
 def test_model(model, test_loader,lr=0,log_filename=None,ae_dim=None, hid_dim=None):
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -345,6 +345,7 @@ def test_model(model, test_loader,lr=0,log_filename=None,ae_dim=None, hid_dim=No
     all_real_od = []
     all_pred_od = []
 
+    start_time = time.time()
     with torch.no_grad():
         for data in test_loader:
             inputs, targets = data
@@ -372,6 +373,10 @@ def test_model(model, test_loader,lr=0,log_filename=None,ae_dim=None, hid_dim=No
             all_real_od.append(targets.cpu().numpy())
             all_pred_od.append(outputs.cpu().numpy())
 
+
+    end_time = time.time()
+    infer_time = end_time - start_time
+
     test_loss /= len(test_loader)
     rmse_total /= len(test_loader)
     mae_total /= len(test_loader)
@@ -388,7 +393,7 @@ def test_model(model, test_loader,lr=0,log_filename=None,ae_dim=None, hid_dim=No
 
     with open(log_filename, 'a') as log_file:
         log_file.write(
-            f"Lr = {lr},AE_dim: {ae_dim} HID_dim: {hid_dim} Test Loss: {test_loss:.4f} RMSE: {rmse_total:.4f} MAE: {mae_total:.4f} MAPE: {mape_total:.4f} CPC: {cpc_total:.4f} JSD: {jsd_total:.4f}\n")
+            f"Lr = {lr},AE_dim: {ae_dim} HID_dim: {hid_dim} Test Loss: {test_loss:.4f} RMSE: {rmse_total:.4f} MAE: {mae_total:.4f} MAPE: {mape_total:.4f} CPC: {cpc_total:.4f} JSD: {jsd_total:.4f} Infer time:{infer_time}s\n")
 
 def main():
     # # 定义学习率列表
