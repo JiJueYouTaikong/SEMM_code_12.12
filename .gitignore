@@ -9,3 +9,6 @@ __pycache__/
 *.pyd
 *.pth
 *.pt
+*.csv
+*.zip
+*.log
