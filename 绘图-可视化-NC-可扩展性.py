@@ -16,7 +16,7 @@ plt.rcParams['grid.linewidth'] = 0.95  # 网格线宽度
 # 数据定义
 models = ['SSM', 'SEMM-SSM']
 metrics = ['RMSE', 'MAE', 'CPC', 'JSD', 'Inference Time (s)']
-ssm_values = np.array([7.3833, 1.2922, 0.5672, 0.1918, 9358.6992])
+ssm_values = np.array([7.8096, 1.2922, 0.5744, 0.2312, 9358.6992])
 semm_ssm_values = np.array([6.866, 1.0325, 0.6461, 0.1117, 0.6343])
 
 # 计算改进率和绝对差值
