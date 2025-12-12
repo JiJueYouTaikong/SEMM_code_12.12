@@ -11,16 +11,23 @@ import geopandas as gpd
 from matplotlib.patches import Polygon as MplPolygon
 from matplotlib.path import Path
 from matplotlib.patches import PathPatch
+from datetime import datetime
 
+# 获取当前时间
+now = datetime.now()
+
+# 按所需格式转换为字符串
+formatted_time = now.strftime("%Y-%m-%d-%H-%M-%S")
 # ---------- 参数配置 ----------
 grid_csv = "../地图/1.1km网格.csv"
 v1_file = "../地图/网格映射v1.npy"
 boundary_csv = "../地图/ad_county.csv"
-time_step = 9  # 第10个时间步(0-based)
+
+# 保留后24个时间步（一天）
+KEEP_LAST_TIME_STEPS = 24
 
 # 扩展OD数据：真实值 + 5个预测方法（SUE-GB SSM GPT2 DeepGravity Ours）
 od_sources = {
-
     "SUE-GB": "../测试集TNN/Pred-SUE-GB.npy",  # 请替换为实际文件路径
     "SSM": "../测试集TNN/Pred_SSM_SUE_MSA_6.15_7.80.npy",  # 请替换为实际文件路径
     "GPT2": "../测试集TNN/Pred_GPT2.npy",  # 请替换为实际文件路径
@@ -38,6 +45,39 @@ center_lat, center_lon = 30.4341, 114.5113
 fig_size = (24, 16)  # 宽24，高16，保证子图清晰
 dpi = 300
 
+
+colors = ['#5e62a9','#fdffb6','#93002e']
+colors = ['#190aed','#dd1c2f','#fffc52']
+
+
+
+# 颜色配置（按绘制顺序：浅色、中间色、红色）
+COLOR_CONFIG = {
+    "light": {
+        "range": (1, 5),
+        "color": colors[0],
+        "linewidth": 1,
+        "alpha": 0.6,  # 降低基础透明度，避免叠加后过亮
+        "zorder": 10
+    },
+    "middle": {
+        "range": (5, 50),
+        "color": colors[1],
+        "linewidth": 1.2,
+        "alpha": 0.6,
+        "zorder": 11
+    },
+    "red": {
+        "range": (50, np.inf),
+        "color": colors[2],
+        "linewidth": 1.3,
+        "alpha": 0.6,
+        "zorder": 12
+    }
+}
+# 绘制顺序：先浅色，再中间色，最后红色
+DRAW_ORDER = ["light", "middle", "red"]
+
 # ---------- 加载数据 ----------
 # 1. 网格数据
 df = pd.read_csv(grid_csv)
@@ -54,6 +94,9 @@ gdf_grid.crs = "EPSG:4326"  # WGS84坐标系
 # 2. 网格映射
 v1 = np.load(v1_file).astype(int)
 v1_set = set(v1)
+# 预建v1索引到网格idx的映射字典（提升查询效率）
+v1_to_grid = {idx: grid_idx for idx, grid_idx in enumerate(v1)}
+grid_to_v1 = {grid_idx: idx for idx, grid_idx in enumerate(v1)}
 
 # 3. 行政边界
 boundary_df = pd.read_csv(boundary_csv)
@@ -79,15 +122,26 @@ for idx, row in gdf_grid.iterrows():
 x_min, x_max = gdf_grid['Min Longitude'].min(), gdf_grid['Max Longitude'].max()
 y_min, y_max = gdf_grid['Min Latitude'].min(), gdf_grid['Max Latitude'].max()
 
+# 预加载所有OD数据并仅保留后24个时间步
+od_data_dict = {}
+for name, path in od_sources.items():
+    od_data = np.load(path)
+    # 检查时间步数量
+    num_time_steps = od_data.shape[0]
+    if num_time_steps < KEEP_LAST_TIME_STEPS:
+        print(f"警告：{name}的时间步数量({num_time_steps})不足{KEEP_LAST_TIME_STEPS}个，将使用全部数据")
+        kept_od_data = od_data
+    else:
+        # 切片保留后24个时间步
+        kept_od_data = od_data[-KEEP_LAST_TIME_STEPS:]
+        print(f"{name}已保留后{KEEP_LAST_TIME_STEPS}个时间步，原数据{num_time_steps}个时间步")
+
+    od_data_dict[name] = kept_od_data
+    # 打印最终数据形状，方便调试
+    print(f"加载{name}数据，最终形状：{kept_od_data.shape}")
+
 
 # ---------- 辅助函数 ----------
-# 颜色映射函数
-def get_color_map(values, cmap_name='Accent'):
-    norm = mcolors.Normalize(vmin=values.min(), vmax=values.max())
-    cmap = cm.get_cmap(cmap_name)
-    return [cmap(norm(val)) if val > 0 else (1, 1, 1, 0) for val in values]
-
-
 # 生成贝塞尔弧线坐标（用于Matplotlib绘制）
 def generate_arc_coordinates(start, end, resolution=10):
     lat1, lon1 = start
@@ -136,7 +190,7 @@ def plot_clipped_polygon(ax, poly, fill_color, edge_color='black', edge_width=2)
 
 
 # ---------- 子图绘制函数 ----------
-def plot_od_subplot(ax, od_matrix, label):
+def plot_od_subplot(ax, od_data, label):
     # 1. 配置子图属性
     ax.set_aspect('equal')
     ax.set_xlim(x_min, x_max)
@@ -151,42 +205,77 @@ def plot_od_subplot(ax, od_matrix, label):
         # 绘制裁剪后的网格
         plot_clipped_polygon(ax, clipped_poly, fill_color=fill_color, edge_width=1)
 
-    # 3. 绘制OD弧线
-    for origin_idx in grid_centers:
-        if origin_idx not in v1_set:
-            continue
-        origin_center = grid_centers[origin_idx]
-        for dest_idx in grid_centers:
-            if dest_idx == origin_idx or dest_idx not in v1_set:
+    # 3. 分类收集所有保留时间步的OD弧线数据（按颜色类型）
+    arc_data = {
+        "light": [],
+        "middle": [],
+        "red": []
+    }
+
+    # 获取保留的时间步数量
+    num_kept_steps = od_data.shape[0]
+    print(f"处理{label}，保留的时间步数量：{num_kept_steps}")
+
+    # 遍历所有保留的时间步
+    for time_step in range(num_kept_steps):
+        od_matrix = od_data[time_step]
+
+        for origin_idx in grid_centers:
+            if origin_idx not in v1_set:
+                continue
+            origin_center = grid_centers[origin_idx]
+            # 快速获取OD矩阵中的索引
+            try:
+                orig_od_idx = grid_to_v1[origin_idx]
+            except KeyError:
                 continue
 
-            # 获取OD值
-            orig_od_idx = np.where(v1 == origin_idx)[0][0]
-            dest_od_idx = np.where(v1 == dest_idx)[0][0]
-            od_value = od_matrix[orig_od_idx, dest_od_idx]
+            for dest_idx in grid_centers:
+                if dest_idx == origin_idx or dest_idx not in v1_set:
+                    continue
+                # 快速获取OD矩阵中的索引
+                try:
+                    dest_od_idx = grid_to_v1[dest_idx]
+                except KeyError:
+                    continue
 
-            if od_value >= 1:
-                dest_center = grid_centers[dest_idx]
-                # 生成弧线坐标
-                arc_coords = generate_arc_coordinates(origin_center, dest_center)
-                # 根据OD值设置样式
-                if od_value <= 5:
-                    color = '#5e62a9'
-                    linewidth = 1.3
-                    alpha = 0.4
-                elif od_value <= 10:
-                    color = '#fdffb6'
-                    linewidth = 1.4
-                    alpha = 0.75
+                # 获取OD值
+                od_value = od_matrix[orig_od_idx, dest_od_idx]
+                if od_value < 1:
+                    continue
+
+                # 确定颜色类型
+                if od_value <= COLOR_CONFIG["light"]["range"][1]:
+                    color_type = "light"
+                elif od_value <= COLOR_CONFIG["middle"]["range"][1]:
+                    color_type = "middle"
                 else:
-                    color = '#93002e'
-                    linewidth = 1.5
-                    alpha = 1.0
-                # 绘制弧线
-                ax.plot([p[0] for p in arc_coords], [p[1] for p in arc_coords],
-                        color=color, linewidth=linewidth, alpha=alpha, zorder=10)
+                    color_type = "red"
 
-    # 4. 添加子图标注（位于子图下方中央）
+                # 生成弧线坐标
+                dest_center = grid_centers[dest_idx]
+                arc_coords = generate_arc_coordinates(origin_center, dest_center)
+                # 存储弧线数据
+                arc_data[color_type].append({
+                    "coords": arc_coords,
+                    "config": COLOR_CONFIG[color_type]
+                })
+
+    # 4. 按顺序绘制弧线（先浅色，再中间色，最后红色）
+    for color_type in DRAW_ORDER:
+        for arc in arc_data[color_type]:
+            coords = arc["coords"]
+            config = arc["config"]
+            ax.plot(
+                [p[0] for p in coords],
+                [p[1] for p in coords],
+                color=config["color"],
+                linewidth=config["linewidth"],
+                alpha=config["alpha"],
+                zorder=config["zorder"]
+            )
+
+    # 5. 添加子图标注（位于子图下方中央）
     ax.text(0.5, -0.05, label, transform=ax.transAxes, ha='center', va='top',
             fontsize=14, weight='bold')
 
@@ -198,12 +287,11 @@ def plot_od_grid():
     axes = axes.flatten()  # 展平为一维数组，方便遍历
 
     # 2. 遍历OD数据绘制子图
-    for i, (label, file_path) in enumerate(od_sources.items()):
+    for i, (label, od_data) in enumerate(od_data_dict.items()):
         if i >= len(axes):
             print(f"警告：子图数量({len(axes)})不足，跳过{label}")
             break
-        od_matrix = np.load(file_path)[time_step]  # [110, 110]
-        plot_od_subplot(axes[i], od_matrix, subplot_labels[i])
+        plot_od_subplot(axes[i], od_data, subplot_labels[i])
 
     # 3. 隐藏多余的子图（如果有）
     for i in range(len(od_sources), len(axes)):
@@ -211,12 +299,12 @@ def plot_od_grid():
 
     # 4. 调整布局并保存
     plt.tight_layout()
-    output_file = f"Fig_OD_line_in_map_all_methods.png"
+    output_file = f"Fig_OD_line_in_map_v3_{formatted_time}.png"
     plt.savefig(output_file, format='png', bbox_inches='tight', pad_inches=0.1)
     # 可选：保存为PDF
-    # plt.savefig("od_all_methods.pdf", format='pdf', bbox_inches='tight', pad_inches=0.1)
+    # plt.savefig(f"od_last_{KEEP_LAST_TIME_STEPS}_time_steps.pdf", format='pdf', bbox_inches='tight', pad_inches=0.1)
     plt.close()
-    print(f"✅ 多方法OD对比图已保存为 {output_file}")
+    print(f"✅ 后{KEEP_LAST_TIME_STEPS}个时间步OD对比图已保存为 {output_file}")
 
 
 # ---------- 执行绘制 ----------

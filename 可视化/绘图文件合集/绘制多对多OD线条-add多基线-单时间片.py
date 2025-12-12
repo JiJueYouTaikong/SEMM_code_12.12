@@ -16,6 +16,7 @@ from matplotlib.patches import PathPatch
 grid_csv = "../地图/1.1km网格.csv"
 v1_file = "../地图/网格映射v1.npy"
 boundary_csv = "../地图/ad_county.csv"
+time_step = 9  # 第10个时间步(0-based)
 
 # 扩展OD数据：真实值 + 5个预测方法（SUE-GB SSM GPT2 DeepGravity Ours）
 od_sources = {
@@ -42,29 +43,26 @@ COLOR_CONFIG = {
         "range": (1, 5),
         "color": '#5e62a9',
         "linewidth": 1.3,
-        "alpha": 0.4,
+        "alpha": 1,
         "zorder": 10
     },
     "middle": {
         "range": (5, 10),
         "color": '#fdffb6',
         "linewidth": 1.4,
-        "alpha": 0.75,
+        "alpha": 1,
         "zorder": 11
     },
     "red": {
         "range": (10, np.inf),
         "color": '#93002e',
-        "linewidth": 1.5,
-        "alpha": 1.0,
+        "linewidth": 1.4,
+        "alpha": 1,
         "zorder": 12
     }
 }
 # 绘制顺序：先浅色，再中间色，最后红色
 DRAW_ORDER = ["light", "middle", "red"]
-
-# 筛选参数：前20%的网格
-TOP_PERCENT = 0.2
 
 # ---------- 加载数据 ----------
 # 1. 网格数据
@@ -85,8 +83,6 @@ v1_set = set(v1)
 # 预建v1索引到网格idx的映射字典（提升查询效率）
 v1_to_grid = {idx: grid_idx for idx, grid_idx in enumerate(v1)}
 grid_to_v1 = {grid_idx: idx for idx, grid_idx in enumerate(v1)}
-# 网格数量
-n_grids = len(v1)
 
 # 3. 行政边界
 boundary_df = pd.read_csv(boundary_csv)
@@ -114,6 +110,13 @@ y_min, y_max = gdf_grid['Min Latitude'].min(), gdf_grid['Max Latitude'].max()
 
 
 # ---------- 辅助函数 ----------
+# 颜色映射函数
+def get_color_map(values, cmap_name='Accent'):
+    norm = mcolors.Normalize(vmin=values.min(), vmax=values.max())
+    cmap = cm.get_cmap(cmap_name)
+    return [cmap(norm(val)) if val > 0 else (1, 1, 1, 0) for val in values]
+
+
 # 生成贝塞尔弧线坐标（用于Matplotlib绘制）
 def generate_arc_coordinates(start, end, resolution=10):
     lat1, lon1 = start
@@ -161,52 +164,20 @@ def plot_clipped_polygon(ax, poly, fill_color, edge_color='black', edge_width=2)
             ax.add_patch(mpl_poly)
 
 
-# 计算网格的出发+到达总量，并筛选前20%的网格
-def get_top_grids(od_matrix):
-    """
-    计算每个网格的出发总量（行和）+ 到达总量（列和），返回前20%的网格索引
-
-    Parameters:
-        od_matrix (np.array): 形状为[time_steps, n_grids, n_grids]的OD矩阵
-
-    Returns:
-        top_grid_indices (set): 前20%网格的v1索引集合
-        top_grid_ids (set): 前20%网格的原始ID集合
-    """
-    # 聚合所有时间步的OD数据
-    od_sum = np.sum(od_matrix, axis=0)  # [n_grids, n_grids]
-
-    # 计算出发总量（行和）和到达总量（列和）
-    outbound = np.sum(od_sum, axis=1)  # 每个网格的出发总量
-    inbound = np.sum(od_sum, axis=0)  # 每个网格的到达总量
-    total = outbound + inbound  # 出发+到达总量
-
-    # 计算阈值：前20%的网格
-    top_n = int(np.ceil(n_grids * TOP_PERCENT))
-    threshold = np.partition(total, -top_n)[-top_n]  # 快速计算第top_n大的值
-
-    # 筛选前20%的网格（v1索引）
-    top_v1_indices = set(np.where(total >= threshold)[0])
-    # 转换为原始网格ID
-    top_grid_ids = set([v1_to_grid[idx] for idx in top_v1_indices])
-
-    return top_v1_indices, top_grid_ids
-
-
 # ---------- 子图绘制函数 ----------
-def plot_od_subplot(ax, od_matrix, label, top_v1_indices, top_grid_ids):
+def plot_od_subplot(ax, od_matrix, label):
     # 1. 配置子图属性
     ax.set_aspect('equal')
     ax.set_xlim(x_min, x_max)
     ax.set_ylim(y_min, y_max)
     ax.axis('off')  # 隐藏坐标轴
 
-    # 2. 绘制网格（移除灰色填充，仅保留边界）
+    # 2. 绘制网格
     for idx in clipped_polygons:
         clipped_poly = clipped_polygons[idx]
-        # 填充颜色改为透明（移除灰色上色）
-        fill_color = (1, 1, 1, 0)
-        # 绘制裁剪后的网格（仅边界）
+        # 填充颜色（仅v1区域）
+        fill_color = (1, 1, 1, 0) if idx not in v1_set else (0.8, 0.8, 0.8, 0.7)
+        # 绘制裁剪后的网格
         plot_clipped_polygon(ax, clipped_poly, fill_color=fill_color, edge_width=1)
 
     # 3. 分类收集OD弧线数据（按颜色类型）
@@ -217,8 +188,7 @@ def plot_od_subplot(ax, od_matrix, label, top_v1_indices, top_grid_ids):
     }
 
     for origin_idx in grid_centers:
-        # 仅处理前20%的网格作为出发点
-        if origin_idx not in top_grid_ids:
+        if origin_idx not in v1_set:
             continue
         origin_center = grid_centers[origin_idx]
         # 快速获取OD矩阵中的索引
@@ -228,8 +198,7 @@ def plot_od_subplot(ax, od_matrix, label, top_v1_indices, top_grid_ids):
             continue
 
         for dest_idx in grid_centers:
-            # 仅处理前20%的网格作为到达点
-            if dest_idx == origin_idx or dest_idx not in top_grid_ids:
+            if dest_idx == origin_idx or dest_idx not in v1_set:
                 continue
             # 快速获取OD矩阵中的索引
             try:
@@ -237,7 +206,7 @@ def plot_od_subplot(ax, od_matrix, label, top_v1_indices, top_grid_ids):
             except KeyError:
                 continue
 
-            # 获取OD值（所有时间步的总和）
+            # 获取OD值
             od_value = od_matrix[orig_od_idx, dest_od_idx]
             if od_value < 1:
                 continue
@@ -263,7 +232,7 @@ def plot_od_subplot(ax, od_matrix, label, top_v1_indices, top_grid_ids):
     for color_type in DRAW_ORDER:
         for arc in arc_data[color_type]:
             coords = arc["coords"]
-            config = arc["color_type"]
+            config = arc["config"]
             ax.plot(
                 [p[0] for p in coords],
                 [p[1] for p in coords],
@@ -289,20 +258,8 @@ def plot_od_grid():
         if i >= len(axes):
             print(f"警告：子图数量({len(axes)})不足，跳过{label}")
             break
-
-        # 加载所有时间步的OD数据
-        od_matrix = np.load(file_path)  # 形状为[time_steps, n_grids, n_grids]
-        print(f"加载{label}的OD数据，形状：{od_matrix.shape}")
-
-        # 筛选前20%的网格
-        top_v1_indices, top_grid_ids = get_top_grids(od_matrix)
-        print(f"{label}筛选出前{TOP_PERCENT * 100}%的网格数量：{len(top_grid_ids)}")
-
-        # 聚合所有时间步的OD数据
-        od_sum = np.sum(od_matrix, axis=0)  # [n_grids, n_grids]
-
-        # 绘制子图
-        plot_od_subplot(axes[i], od_sum, subplot_labels[i], top_v1_indices, top_grid_ids)
+        od_matrix = np.load(file_path)[time_step]  # [110, 110]
+        plot_od_subplot(axes[i], od_matrix, subplot_labels[i])
 
     # 3. 隐藏多余的子图（如果有）
     for i in range(len(od_sources), len(axes)):
@@ -310,7 +267,7 @@ def plot_od_grid():
 
     # 4. 调整布局并保存
     plt.tight_layout()
-    output_file = f"Fig_OD_line_in_map_v3_top{int(TOP_PERCENT * 100)}%.png"
+    output_file = f"Fig_OD_line_in_map_v2.png"
     plt.savefig(output_file, format='png', bbox_inches='tight', pad_inches=0.1)
     # 可选：保存为PDF
     # plt.savefig("od_all_methods.pdf", format='pdf', bbox_inches='tight', pad_inches=0.1)
