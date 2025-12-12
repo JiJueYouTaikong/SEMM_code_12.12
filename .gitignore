@@ -1,0 +1,11 @@
+*.npy
+*.npz
+*.html
+*.htm
+# 忽略Python缓存和编译文件
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.pth
+*.pt
