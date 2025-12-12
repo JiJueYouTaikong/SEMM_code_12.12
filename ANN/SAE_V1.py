@@ -1,73 +1,119 @@
-import random
+import os
 
 import numpy as np
-import torch
-import torch.nn as nn
-import torch.optim as optim
-from torch.utils.data import DataLoader, TensorDataset
-import os
-# from torchinfo import summary
+import torch.nn.functional as F
+import random
 import torch
 import torch.nn as nn
 import torch.optim as optim
 from torch.utils.data import DataLoader, TensorDataset
 from sklearn.preprocessing import MinMaxScaler
-import numpy as np
-import time
-import matplotlib.pyplot as plt
-import seaborn as sns
-import numpy as np
-
-# 数据准备
-def normalize_data(data):
-    min_val = data.min()
-    max_val = data.max()
-    return (data - min_val) / (max_val - min_val), min_val, max_val
 
 
+# 稀疏自编码器
+class SparseAutoEncoder(nn.Module):
+    def __init__(self, input_dim, hidden_dim, rho=0.05, beta=4.0, lam=0.04):
+        super(SparseAutoEncoder, self).__init__()
+        self.encoder = nn.Linear(input_dim, hidden_dim)
+        self.decoder = nn.Linear(hidden_dim, input_dim)
 
-
-# 定义模型
-class ODModel(nn.Module):
-    def __init__(self, N):
-        super(ODModel, self).__init__()
-        self.N = N
-
-        layers = []
-        input_dim = N
-
-        # 前 6 层：256 维
-        for i in range(6):
-            layers.append(nn.Linear(input_dim, 256))
-            layers.append(nn.LeakyReLU(negative_slope=0.01))
-            input_dim = 256
-
-        # 后 9 层：128 维
-        for i in range(8):  # 前 8 层是 128 -> 128
-            layers.append(nn.Linear(input_dim, 128))
-            layers.append(nn.LeakyReLU(negative_slope=0.01))
-            input_dim = 128
-
-        # 第 15 层（最后一层隐藏层）：128 -> 输出 N*N
-        layers.append(nn.Linear(input_dim, N * N))
-
-        # 封装为 Sequential
-        self.mlp = nn.Sequential(*layers)
+        self.rho = rho  # 稀疏目标
+        self.beta = beta
+        self.lam = lam
 
     def forward(self, x):
-        '''
-        :param x: 输入速度 [B, N]
-        :return: od矩阵 [B, N, N]
-        '''
-        batch_size, N = x.shape
-        od_matrix_flat = self.mlp(x)  # [B, N*N]
-        od_matrix = od_matrix_flat.view(batch_size, N, N)
-        return od_matrix
+        z = torch.sigmoid(self.encoder(x))  # 用于KL散度
+        out = self.decoder(z)  # 线性激活
+        return out, z
+
+    def loss(self, x, out, hidden):
+        mse = F.mse_loss(out, x, reduction='mean')
+
+        # 稀疏约束
+        rho_hat = torch.mean(hidden, dim=0)
+        kl = self.rho * torch.log(self.rho / (rho_hat + 1e-8)) + \
+             (1 - self.rho) * torch.log((1 - self.rho) / (1 - rho_hat + 1e-8))
+        kl_loss = torch.sum(kl)
+
+        # L2 正则
+        l2_loss = 0.0
+        for param in self.parameters():
+            l2_loss += torch.sum(param ** 2)
+
+        return mse + self.beta * kl_loss + self.lam * l2_loss
+
+# 论文模型：SAE + FCL
+class SAEOFCLModel(nn.Module):
+    def __init__(self, input_dim, output_dim, hidden_dims=[10, 10, 10],hid_dim=None):
+        super(SAEOFCLModel, self).__init__()
+        self.hidden_dims = hidden_dims
+        self.autoencoders = nn.ModuleList()
+        self.encoders = nn.ModuleList()
+        self.N = input_dim
+
+        dims = [input_dim] + hidden_dims
+        for i in range(len(dims) - 1):
+            sae = SparseAutoEncoder(dims[i], dims[i+1])
+            self.autoencoders.append(sae)
+            self.encoders.append(sae.encoder)
+
+        # 最后的FCL输出层
+        self.predictor = nn.Sequential(
+            nn.Linear(hidden_dims[-1], hid_dim),
+            nn.ReLU(),
+            nn.Linear(hid_dim, output_dim)
+        )
+
+    def forward(self, x):
+        for encoder in self.encoders:
+            x = torch.sigmoid(encoder(x))
+            out = self.predictor(x)
+            out = out.view(-1,self.N, self.N)
+        return out
+
+# SAE预训练（无监督，逐层）
+def pretrain_saes(model, data, epochs=2000, lr=0.01, patience=20, device='cpu'):
+    x = data.to(device)
+    print("用于预训练的x", x.shape)
+
+    for i, ae in enumerate(model.autoencoders):
+        ae.to(device)
+        optimizer = optim.Adam(ae.parameters(), lr=lr)
+
+        best_loss = float('inf')
+        patience_counter = 0
+
+        for epoch in range(epochs):
+            ae.train()
+            out, hidden = ae(x)
+            loss = ae.loss(x, out, hidden)
+
+            optimizer.zero_grad()
+            loss.backward()
+            optimizer.step()
+
+            if (epoch + 1) % 10 == 0:
+                print(f'[SAE-{i+1}] Epoch {epoch+1}, Loss: {loss.item():.4f}')
+
+            if loss.item() < best_loss:
+                best_loss = loss.item()
+                patience_counter = 0
+                torch.save(ae.state_dict(), f'ckpt/sae_layer_{i+1}_best.pth')
+            else:
+                patience_counter += 1
+
+            if patience_counter >= patience:
+                print(f'[SAE-{i+1}] Early stopping at epoch {epoch+1}, best loss: {best_loss:.4f}')
+                break
+
+        # 训练完成后加载最优权重
+        ae.load_state_dict(torch.load(f'ckpt/sae_layer_{i+1}_best.pth'))
+        # 用编码输出作为下一层输入
+        x = torch.sigmoid(ae.encoder(x)).detach()
 
 
 # 训练过程
 def train_model(model, train_loader, val_loader, epochs=100, patience=10,learning_rate=0.001):
-
 
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     model.to(device)
@@ -76,11 +122,8 @@ def train_model(model, train_loader, val_loader, epochs=100, patience=10,learnin
     criterion = nn.MSELoss()
     optimizer = optim.Adam(model.parameters(), lr=learning_rate)
 
-
     best_val_loss = float('inf')
     patience_counter = 0
-    N = 110
-
 
     # 训练过程
     for epoch in range(epochs):
@@ -95,12 +138,9 @@ def train_model(model, train_loader, val_loader, epochs=100, patience=10,learnin
             loss = criterion(outputs, targets)
             loss.backward()
             optimizer.step()
-
             train_loss += loss.item()
-
         # 计算训练集的平均损失
         train_loss /= len(train_loader)
-
         # 验证过程
         model.eval()
         val_loss = 0
@@ -112,20 +152,17 @@ def train_model(model, train_loader, val_loader, epochs=100, patience=10,learnin
                 outputs = model(inputs)
                 loss = criterion(outputs, targets)
                 val_loss += loss.item()
-
         # 计算验证集的平均损失
         val_loss /= len(val_loader)
 
-
         print(f"Epoch [{epoch + 1}/{epochs}], Train Loss: {train_loss:.4f}, Validation Loss: {val_loss:.4f}")
-        # ({optimizer.param_groups[0]['lr']:.6f})
 
         # 提前停止机制
         if val_loss < best_val_loss:
             best_val_loss = val_loss
             patience_counter = 0
             # 保存最佳模型
-            torch.save(model.state_dict(), "ckpt/best_model_DeepGravity.pth")
+            torch.save(model.state_dict(), "ckpt/best_sae_model.pth")
             print(f"best saved at epoch{epoch + 1},best：{best_val_loss:.4f}")
         else:
             patience_counter += 1
@@ -133,7 +170,6 @@ def train_model(model, train_loader, val_loader, epochs=100, patience=10,learnin
         if patience_counter >= patience:
             print("Early stopping triggered.")
             break
-
 
 def calculate_rmse_mae(predictions, targets):
     '''
@@ -207,14 +243,9 @@ def set_seed(seed):
     torch.manual_seed(seed)
     torch.cuda.manual_seed_all(seed)  # 设置所有GPU的随机种子
 
-
-
-
 # 加载数据
-def load_data(is_mcm=False):
-
-    log_filename = f"log/DeepGravity_完整批处理_MCM_{is_mcm}.log"
-
+def load_data(is_mcm):
+    log_filename = f"log/SAE_MCM_{is_mcm}.log"
     set_seed(42)
 
     if not is_mcm:
@@ -230,6 +261,7 @@ def load_data(is_mcm=False):
         od = np.load('../data/OD_完整批处理_3.17_Final_MCM_60.npy')
         # 获取数据长度 T
         T, N = speed.shape
+
         # 根据指定的时间步数划分
         test_size = 35
         val_size = 33
@@ -249,17 +281,22 @@ def load_data(is_mcm=False):
     print("6:2:2顺序划分的验证集Speed", speed_val.shape, "OD", od_val.shape)
     print("6:2:2顺序划分的测试集Speed", speed_test.shape, "OD", od_test.shape)
 
+
+    # 打印结果形状
+    print("特征处理后的训练集 shape:", speed_train.shape, "OD形状", od_train.shape)
+    print("特征处理后的验证集 shape:", speed_val.shape, "OD形状", od_val.shape)
+    print("特征处理后的测试集 shape:", speed_test.shape, "OD形状", od_test.shape)
+
     # 归一化
     scaler = MinMaxScaler()
 
-    train_x_scaler = scaler.fit_transform(speed_train.reshape(-1, 1)).reshape(speed_train.shape)
-    val_x_scaler = scaler.transform(speed_val.reshape(-1, 1)).reshape(speed_val.shape)
-    tes_x_scaler = scaler.transform(speed_test.reshape(-1, 1)).reshape(speed_test.shape)
+    x_train_scale = scaler.fit_transform(speed_train.reshape(-1, 1)).reshape(speed_train.shape)
+    x_val_scale = scaler.transform(speed_val.reshape(-1, 1)).reshape(speed_val.shape)
+    x_test_scale = scaler.transform(speed_test.reshape(-1, 1)).reshape(speed_test.shape)
 
-
-    train_data = train_x_scaler
-    val_data = val_x_scaler
-    test_data = tes_x_scaler
+    train_data = x_train_scale
+    val_data = x_val_scale
+    test_data = x_test_scale
 
     print(train_data[0, 66:82])
 
@@ -282,19 +319,18 @@ def load_data(is_mcm=False):
     val_dataset = TensorDataset(val_data, val_target)
     test_dataset = TensorDataset(test_data, test_target)
 
-    batch = 32
-    train_loader = DataLoader(train_dataset, batch_size=batch, shuffle=True)
-    val_loader = DataLoader(val_dataset, batch_size=batch)
-    test_loader = DataLoader(test_dataset, batch_size=batch)
+    train_loader = DataLoader(train_dataset, batch_size=32, shuffle=True)
+    val_loader = DataLoader(val_dataset, batch_size=32)
+    test_loader = DataLoader(test_dataset, batch_size=32)
 
     return train_loader, val_loader, test_loader,log_filename
 
 
 # 测试
-def test_model(model, test_loader,lr=0,log_filename=None):
+def test_model(model, test_loader,lr=0,log_filename=None,ae_dim=None, hid_dim=None):
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     model.to(device)
-    model.load_state_dict(torch.load("ckpt/best_model_DeepGravity.pth"))
+    model.load_state_dict(torch.load("ckpt/best_sae_model.pth"))
 
     model.eval()
     test_loss = 0
@@ -303,7 +339,6 @@ def test_model(model, test_loader,lr=0,log_filename=None):
     mape_total = 0
     cpc_total = 0
     jsd_total = 0
-
     criterion = nn.MSELoss()
     N= 110
 
@@ -343,8 +378,9 @@ def test_model(model, test_loader,lr=0,log_filename=None):
     mape_total /= len(test_loader)
     cpc_total /= len(test_loader)
     jsd_total /= len(test_loader)
+
     print(f"Test Loss: {test_loss:.4f}")
-    print(f"Test RMSE: {rmse_total:.4f} Test MAE: {mae_total:.4f} Test MAPE: {mape_total:.4f} CPC:{cpc_total:.4f} JSD:{jsd_total:.4f}")
+    print(f"Test RMSE: {rmse_total:.4f} Test MAE: {mae_total:.4f} Test MAPE: {mape_total:.4f} CPC: {cpc_total:.4f} JSD: {jsd_total:.4f}")
 
     np.set_printoptions(precision=2, suppress=True)
     all_real_od_t = np.concatenate(all_real_od, axis=0)
@@ -352,33 +388,61 @@ def test_model(model, test_loader,lr=0,log_filename=None):
 
     with open(log_filename, 'a') as log_file:
         log_file.write(
-            f"Lr = {lr},Test Loss: {test_loss:.4f} RMSE: {rmse_total:.4f} MAE: {mae_total:.4f} MAPE: {mape_total:.4f} CPC:{cpc_total:.4f} JSD:{jsd_total:.4f}\n")
+            f"Lr = {lr},AE_dim: {ae_dim} HID_dim: {hid_dim} Test Loss: {test_loss:.4f} RMSE: {rmse_total:.4f} MAE: {mae_total:.4f} MAPE: {mape_total:.4f} CPC: {cpc_total:.4f} JSD: {jsd_total:.4f}\n")
 
-
-# 主程序
 def main():
+    # # 定义学习率列表
+    lr_list = [0.1, 0.05, 0.045, 0.04, 0.035, 0.03, 0.025, 0.02, 0.015, 0.01, 0.005,
+               0.0045, 0.004, 0.0035, 0.003, 0.0025, 0.002, 0.0015, 0.001, 0.0005, 0.0001]
+
+    lr_list = [0.01, 0.005,
+               0.0045, 0.004, 0.0035, 0.003, 0.0025, 0.002, 0.0015, 0.001]
+
+    ae_dim_list = [10, 32, 64, 128, 256, 512]
+    hid_dim_list = [32, 64, 128, 256, 512, 1024]
+
+    ae_dim_list = [10, 32, 64, 128]
+    hid_dim_list = [32, 64, 128, 256]
 
 
+    lr_list = [0.005]  # 是否当前最佳 YES 6.20  Lr = 0.005,AE_dim: 10 HID_dim: 32
+    ae_dim_list = [10]
+    hid_dim_list = [32]
 
-    # 定义学习率列表
-    # lr_list = [ 0.01, 0.005,
-    #            0.0045, 0.004, 0.0035, 0.003, 0.0025, 0.002, 0.0015, 0.001, 0.0005, 0.0002, 0.0001]
-    lr_list = [0.0035] #  是否当前最佳 YES 6.20
-    lr_list = [0.003]   # MCM 是否当前最佳 YES 6.20
+    lr_list = [0.004]  # MCM 是否当前最佳 YES 6.20  Lr = 0.004,AE_dim: 128 HID_dim: 256
+    ae_dim_list = [128]
+    hid_dim_list = [256]
+
     # 遍历学习率列表
-    for lr in lr_list:
-        print(f"当前学习率: {lr}")
+    for ae_dim in ae_dim_list:
+        for hid_dim in hid_dim_list:
+            for lr in lr_list:
+                print(f"当前组合: ae_dim={ae_dim}, hid_dim={hid_dim}, lr={lr}")
 
-        train_loader, val_loader, test_loader, log_filename = load_data(is_mcm=True)
+                train_loader, val_loader, test_loader,log_filename = load_data(is_mcm=True)
 
-        model = ODModel(N=110)
+                N=110
+                model = SAEOFCLModel(input_dim=N, output_dim=N*N, hidden_dims=[ae_dim, ae_dim, ae_dim],hid_dim = hid_dim)
 
-        # 训练模型
-        train_model(model, train_loader, val_loader, epochs=2000, patience=40, learning_rate=lr)
+                # 从 train_loader 中提取所有输入用于预训练
+                x_all = torch.cat([xb for xb, _ in train_loader], dim=0)
 
-        # 测试模型
-        test_model(model, test_loader, lr=lr,log_filename=log_filename)
+                pretrain_saes(model, x_all, epochs=10000, lr=lr, patience=20, device='cuda' if torch.cuda.is_available() else 'cpu')
 
+                train_model(model, train_loader, val_loader, epochs=2000, patience=20, learning_rate=lr)
+
+                test_model(model, test_loader, lr=lr,log_filename=log_filename,ae_dim=ae_dim, hid_dim=hid_dim)
+
+                # 删除预训练权重文件
+                for i in range(len(model.autoencoders)):
+                    path = f'ckpt/sae_layer_{i + 1}_best.pth'
+                    if os.path.exists(path):
+                        os.remove(path)
+
+                # 删除微调保存的最优模型权重
+                finetune_path = "ckpt/best_sae_model.pth"
+                if os.path.exists(finetune_path):
+                    os.remove(finetune_path)
 
 if __name__ == "__main__":
     main()
