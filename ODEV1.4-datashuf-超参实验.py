@@ -16,7 +16,8 @@ from utils.get_X_Freq import get_X_Freq
 import pywt
 import torch.nn.functional as F
 from utils_v1_4.utils import nb_zeroinflated_nll_loss
-
+import functools
+print = functools.partial(print, flush=True)
 # 数据准备
 def normalize_data(data):
     min_val = data.min()
@@ -233,7 +234,7 @@ class ODModel(nn.Module):
 # 训练过程
 def train_model(model, train_loader, val_loader, epochs=100, patience=10, learning_rate=0.001, is_mcm=None, freq_method=None,stop_type=None):
 
-    device = torch.device("cuda:3" if torch.cuda.is_available() else "cpu")
+    device = torch.device("cuda:2" if torch.cuda.is_available() else "cpu")
     model.to(device)
     print(device)
 
@@ -308,7 +309,7 @@ def train_model(model, train_loader, val_loader, epochs=100, patience=10, learni
 
             patience_counter = 0
             # 保存最佳模型
-            torch.save(model.state_dict(), f"ckpt/v1_4/best_model_{freq_method}_is_mcm_{is_mcm}.pth")
+            torch.save(model.state_dict(), f"ckpt/v1_4_data_shuf/best_model_{freq_method}_is_mcm_{is_mcm}.pth")
             print(f"best saved at epoch{epoch + 1},best：{best_val_loss:.4f}")
         else:
             patience_counter += 1
@@ -450,9 +451,9 @@ def set_seed(seed):
 
 
 # 加载数据
-def load_data(is_mcm=False,freq_shuffle=True,freq_method=None):
+def load_data(is_mcm=False,freq_shuffle=True,freq_method=None,data_shuf=None):
 
-    log_filename = f"log/v1_4/A完整批处理的调参_{freq_method}_MCM_{is_mcm}_Shuffle_{freq_shuffle}.log"
+    log_filename = f"log/v1_4/{freq_method}_MCM_{is_mcm}_data_shuf_{data_shuf}_freq_shuf_{freq_shuffle}.log"
     set_seed(42)
 
     if is_mcm:
@@ -479,11 +480,17 @@ def load_data(is_mcm=False,freq_shuffle=True,freq_method=None):
         train_size = int(T * 0.6)
         val_size = int(T * 0.2)
 
+    # 构建索引
+    all_indices = np.arange(T)
+    if data_shuf:
+        print("[INFO] ************************** data shuffle! *************************************")
+        np.random.seed(42)  # 固定随机种子以确保结果可复现
+        np.random.shuffle(all_indices)
 
-    # 顺序划分索引
-    train_indices = np.arange(0, train_size)
-    val_indices = np.arange(train_size, train_size + val_size)
-    test_indices = np.arange(train_size + val_size, T)
+    # 按索引划分
+    train_indices = all_indices[:train_size]
+    val_indices = all_indices[train_size:train_size + val_size]
+    test_indices = all_indices[train_size + val_size:]
 
 
     # 按索引划分数据
@@ -575,9 +582,9 @@ def load_data(is_mcm=False,freq_shuffle=True,freq_method=None):
 
 # 测试
 def test_model(model, test_loader, lr: float,log_name=None,patience=30, is_mcm=None, freq_method=None,stop_type=None):
-    device = torch.device("cuda:3" if torch.cuda.is_available() else "cpu")
+    device = torch.device("cuda:2" if torch.cuda.is_available() else "cpu")
     model.to(device)
-    path = f"ckpt/v1_4/best_model_{freq_method}_is_mcm_{is_mcm}.pth"
+    path = f"ckpt/v1_4_data_shuf/best_model_{freq_method}_is_mcm_{is_mcm}.pth"
 
     if os.path.exists(path):
         model.load_state_dict(torch.load(path))
@@ -655,7 +662,7 @@ def test_model(model, test_loader, lr: float,log_name=None,patience=30, is_mcm=N
         log_file.write(f"Patience={patience} Loss: {test_loss:.4f} 【RMSE】: 【{rmse_total:.4f}】 MAE: {mae_total:.4f} MAPE: {mape_total:.4f} CPC: {cpc_total:.4f} JSD: {jsd_total:.4f}\n")
 
     # 删除微调保存的最优模型权重
-    path = f"ckpt/v1_4/best_model_{freq_method}_is_mcm_{is_mcm}.pth"
+    path = f"ckpt/v1_4_data_shuf/best_model_{freq_method}_is_mcm_{is_mcm}.pth"
     if os.path.exists(path):
         os.remove(path)
 
@@ -663,18 +670,19 @@ def test_model(model, test_loader, lr: float,log_name=None,patience=30, is_mcm=N
 # 新 main 函数，支持多层嵌套超参搜索
 from itertools import product
 
+
 def main():
     is_mcm_list = [True, False]
     freq_methods = ['WT', 'STFT']
     stop_types = ['rmse', 'nll']
     num_layers_list = [2, 3, 4, 5, 6, 8, 10]
-    hidden_units_list = [64, 128, 256, 512, 1024]
+    hidden_units_list = [64, 128, 256, 512]
     dropout_list = [0.0, 0.1, 0.2]
-    lr_list = [0.05,0.045,0.04,0.03, 0.025, 0.02, 0.015, 0.01, 0.005,
+    lr_list = [0.05, 0.045, 0.04, 0.03, 0.025, 0.02, 0.015, 0.01, 0.005,
                0.0045, 0.004, 0.0035, 0.003, 0.0025, 0.002, 0.0015, 0.001,
-               0.0005, 0.0002, 0.0001]
+               0.0005, 0.0004]
     patience = 20
-
+    data_shuf = True
 
     for is_mcm, freq_method, stop_type in product(is_mcm_list, freq_methods, stop_types):
 
@@ -684,7 +692,7 @@ def main():
                 torch.cuda.empty_cache()
 
                 train_loader, val_loader, test_loader, temp, freq, log_filename = load_data(
-                    is_mcm=is_mcm, freq_shuffle=False, freq_method=freq_method)
+                    is_mcm=is_mcm, freq_shuffle=False, freq_method=freq_method,data_shuf=data_shuf)
 
                 param = f"MCM={is_mcm}, Method={freq_method}, Stop={stop_type}, Layers={num_layers}, Hidden={hidden_units}, Dropout={dropout_rate}, LR={lr}"
                 print(param)

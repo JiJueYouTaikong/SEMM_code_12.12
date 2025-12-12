@@ -211,16 +211,70 @@ def train_model(model, train_loader, val_loader, epochs=100, patience=10, learni
 
 
 def calculate_rmse_mae(predictions, targets):
+    '''
+
+    :param predictions: [T,N,N] T个时间步上的OD矩阵预测值
+    :param targets:  [T,N,N] T个时间步上的OD矩阵真值
+    :return:
+    '''
+    T, N, _ = predictions.shape
     mse = torch.mean((predictions - targets) ** 2)
     rmse = torch.sqrt(mse)
     mae = torch.mean(torch.abs(predictions - targets))
+
+    # 计算 MAPE，避免除以零
     non_zero_mask = targets != 0
     if non_zero_mask.sum() > 0:
         mape = torch.mean(
             torch.abs((predictions[non_zero_mask] - targets[non_zero_mask]) / targets[non_zero_mask]))
     else:
         mape = torch.tensor(0.0)
-    return rmse.item(), mae.item(), mape.item()
+
+    # Flatten
+    pred_flat = predictions.reshape(predictions.shape[0], -1)
+    targ_flat = targets.reshape(targets.shape[0], -1)
+
+    # CPC
+    cpc_list = []
+    for t in range(pred_flat.shape[0]):
+        pred_t = pred_flat[t]
+        targ_t = targ_flat[t]
+        numerator = 2 * torch.sum(torch.minimum(pred_t, targ_t))
+        denominator = torch.sum(pred_t) + torch.sum(targ_t)
+        if denominator > 0:
+            cpc_list.append((numerator / denominator).item())
+        else:
+            cpc_list.append(1.0)
+    cpc = sum(cpc_list) / len(cpc_list)
+
+    # JSD
+    jsd_list = []
+    min_val = 1e-8  # 安全裁剪阈值
+
+    for t in range(pred_flat.shape[0]):
+        pred_t = pred_flat[t]
+        targ_t = targ_flat[t]
+
+        # 构造分布
+        pred_dist = (pred_t + min_val) / (torch.sum(pred_t) + min_val * pred_t.numel())
+        targ_dist = (targ_t + min_val) / (torch.sum(targ_t) + min_val * targ_t.numel())
+
+        # 强制裁剪，防止log(0)
+        pred_dist = torch.clamp(pred_dist, min=min_val)
+        targ_dist = torch.clamp(targ_dist, min=min_val)
+        m = 0.5 * (pred_dist + targ_dist)
+        m = torch.clamp(m, min=min_val)
+
+        kl1 = torch.sum(pred_dist * torch.log(pred_dist / m))
+        kl2 = torch.sum(targ_dist * torch.log(targ_dist / m))
+        jsd_t = 0.5 * (kl1 + kl2)
+
+        if not torch.isnan(jsd_t):
+            jsd_list.append(jsd_t.item())
+    jsd = sum(jsd_list) / len(jsd_list) if jsd_list else 0.0
+
+
+    return rmse.item(), mae.item(), mape.item(),cpc,jsd
 
 
 def test_model(model, test_loader, learning_rate):
@@ -232,6 +286,8 @@ def test_model(model, test_loader, learning_rate):
     total_mae = 0.0
     test_loss = 0.0
     total_mape = 0
+    total_cpc = 0
+    total_jsd = 0
 
     all_real_od = []
     all_pred_od = []
@@ -254,10 +310,12 @@ def test_model(model, test_loader, learning_rate):
             for i in range(N):
                 mask[:, i, i] = 0
 
-            rmse, mae, mape = calculate_rmse_mae(outputs * mask, targets)
+            rmse, mae, mape,cpc,jsd = calculate_rmse_mae(outputs * mask, targets)
             total_rmse += rmse
             total_mae += mae
             total_mape += mape
+            total_cpc += cpc
+            total_jsd += jsd
 
             loss = criterion(outputs, targets)
             test_loss += loss.item()
@@ -268,6 +326,8 @@ def test_model(model, test_loader, learning_rate):
     rmse = total_rmse / len(test_loader)
     mae = total_mae / len(test_loader)
     mape = total_mape / len(test_loader)
+    cpc = total_cpc / len(test_loader)
+    jsd = total_jsd / len(test_loader)
     test_loss = test_loss / len(test_loader)
 
     all_real_od_t = np.concatenate(all_real_od, axis=0)
@@ -280,29 +340,12 @@ def test_model(model, test_loader, learning_rate):
     all_pred_od = np.mean(all_pred_od_t, axis=0)
 
     print(f"Test Loss:{test_loss}")
-    print(f'Test RMSE: {rmse:.4f}, Test MAE: {mae:.4f} Test MAPE: {mape:.4f}')
+    print(f'Test RMSE: {rmse:.4f}, Test MAE: {mae:.4f} Test MAPE: {mape:.4f} CPC: {cpc:.4f} JSD: {jsd:.4f}')
 
-    torch.save(model.state_dict(),
-               f'ckpt/GRU_best_model_{rmse:.4f}_{mae:.4f}_lr_{learning_rate}.pth')
-
-    # print("-------------------不同时间步上---------------------")
-    # for i in range(0, all_real_od_t.shape[0], 8):
-    #     print("-----真实值------")
-    #     print(np.round(all_real_od_t[i, 60:68, 60:68].astype(np.float32), 1))
-    #     print("-----预测值-----")
-    #     print(np.round(all_pred_od_t[i, 60:68, 60:68].astype(np.float32), 1))
-    #
-    # print("-------------------平均时间步上---------------------")
-    # print(all_real_od[60:68, 60:68].astype(int))
-    # print("----------------------------------------------------")
-    # print(all_pred_od[60:68, 60:68].astype(int))
-    #
-    # print(f"Test Loss:{test_loss:.4f}")
-    # print(f'Test RMSE: {rmse:.4f}, Test MAE: {mae:.4f} Test MAPE: {mape:.4f}')
 
     with open(log_filename, 'a') as log_file:
         log_file.write(
-            f"Lr = {learning_rate},Test Loss: {test_loss:.4f} RMSE: {rmse:.4f} MAE: {mae:.4f} MAPE: {mape:.4f}\n")
+            f"Lr = {learning_rate},Test Loss: {test_loss:.4f} RMSE: {rmse:.4f} MAE: {mae:.4f} MAPE: {mape:.4f} CPC: {cpc:.4f} JSD: {jsd:.4f}\n")
 
 
 def main():

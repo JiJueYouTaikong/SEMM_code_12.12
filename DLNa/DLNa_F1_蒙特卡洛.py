@@ -221,6 +221,13 @@ def train_model(model, train_loader, val_loader, epochs=100, patience=10,learnin
 
 
 def calculate_rmse_mae(predictions, targets):
+    '''
+
+    :param predictions: [T,N,N] T个时间步上的OD矩阵预测值
+    :param targets:  [T,N,N] T个时间步上的OD矩阵真值
+    :return:
+    '''
+    T, N, _ = predictions.shape
     mse = torch.mean((predictions - targets) ** 2)
     rmse = torch.sqrt(mse)
     mae = torch.mean(torch.abs(predictions - targets))
@@ -232,7 +239,52 @@ def calculate_rmse_mae(predictions, targets):
             torch.abs((predictions[non_zero_mask] - targets[non_zero_mask]) / targets[non_zero_mask]))
     else:
         mape = torch.tensor(0.0)
-    return rmse.item(), mae.item(), mape.item()
+
+    # Flatten
+    pred_flat = predictions.reshape(predictions.shape[0], -1)
+    targ_flat = targets.reshape(targets.shape[0], -1)
+
+    # CPC
+    cpc_list = []
+    for t in range(pred_flat.shape[0]):
+        pred_t = pred_flat[t]
+        targ_t = targ_flat[t]
+        numerator = 2 * torch.sum(torch.minimum(pred_t, targ_t))
+        denominator = torch.sum(pred_t) + torch.sum(targ_t)
+        if denominator > 0:
+            cpc_list.append((numerator / denominator).item())
+        else:
+            cpc_list.append(1.0)
+    cpc = sum(cpc_list) / len(cpc_list)
+
+    # JSD
+    jsd_list = []
+    min_val = 1e-8  # 安全裁剪阈值
+
+    for t in range(pred_flat.shape[0]):
+        pred_t = pred_flat[t]
+        targ_t = targ_flat[t]
+
+        # 构造分布
+        pred_dist = (pred_t + min_val) / (torch.sum(pred_t) + min_val * pred_t.numel())
+        targ_dist = (targ_t + min_val) / (torch.sum(targ_t) + min_val * targ_t.numel())
+
+        # 强制裁剪，防止log(0)
+        pred_dist = torch.clamp(pred_dist, min=min_val)
+        targ_dist = torch.clamp(targ_dist, min=min_val)
+        m = 0.5 * (pred_dist + targ_dist)
+        m = torch.clamp(m, min=min_val)
+
+        kl1 = torch.sum(pred_dist * torch.log(pred_dist / m))
+        kl2 = torch.sum(targ_dist * torch.log(targ_dist / m))
+        jsd_t = 0.5 * (kl1 + kl2)
+
+        if not torch.isnan(jsd_t):
+            jsd_list.append(jsd_t.item())
+    jsd = sum(jsd_list) / len(jsd_list) if jsd_list else 0.0
+
+
+    return rmse.item(), mae.item(), mape.item(),cpc,jsd
 
 def set_seed(seed):
     np.random.seed(seed)
@@ -380,19 +432,16 @@ def test_model(model, test_loader,lr=0):
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     model.to(device)
     model.load_state_dict(torch.load("ckpt_仿真/best_model_feature1_25.1.14数据集版本.pth"))
-    # model.load_state_dict(torch.load("ckpt_仿真/best_model_feature1_25.1.14数据集版本_8.3251_1.1967_留档.pth"))
-
-
-    #打印结构
-    # summary(model, input_size=(32, 110, 4))
-
     model.eval()
     test_loss = 0
     rmse_total = 0
     mae_total = 0
     mape_total = 0
+    cpc_total = 0
+    jsd_total = 0
+
     criterion = nn.MSELoss()
-    N= 110
+    N = 110
 
     all_real_od = []
     all_pred_od = []
@@ -414,10 +463,12 @@ def test_model(model, test_loader,lr=0):
             test_loss += loss.item()
 
             # 计算 RMSE 和 MAE
-            rmse, mae, mape= calculate_rmse_mae(outputs * mask, targets)
+            rmse, mae, mape, cpc, jsd = calculate_rmse_mae(outputs * mask, targets)
             rmse_total += rmse
             mae_total += mae
             mape_total += mape
+            cpc_total += cpc
+            jsd_total += jsd
 
             all_real_od.append(targets.cpu().numpy())
             all_pred_od.append(outputs.cpu().numpy())
@@ -426,92 +477,19 @@ def test_model(model, test_loader,lr=0):
     rmse_total /= len(test_loader)
     mae_total /= len(test_loader)
     mape_total /= len(test_loader)
-
+    cpc_total /= len(test_loader)
+    jsd_total /= len(test_loader)
     print(f"Test Loss: {test_loss:.4f}")
-    print(f"Test RMSE: {rmse_total:.4f} Test MAE: {mae_total:.4f} Test MAPE: {mape_total:.4f}")
+    print(
+        f"Test RMSE: {rmse_total:.4f} Test MAE: {mae_total:.4f} Test MAPE: {mape_total:.4f} CPC:{cpc_total:.4f} JSD:{jsd_total:.4f}")
 
-    torch.save(model.state_dict(), f"ckpt_仿真/best_model_feature1_25.1.14数据集版本_{rmse_total:.4f}_{mae_total:.4f}_lr_{lr}.pth")
-
-    # 计算平均的OD矩阵
-    # 设置不使用科学计数法
     np.set_printoptions(precision=2, suppress=True)
     all_real_od_t = np.concatenate(all_real_od, axis=0)
     all_pred_od_t = np.concatenate(all_pred_od, axis=0)
-    all_real_od = np.mean(all_real_od_t, axis=0)
-    all_pred_od = np.mean(all_pred_od_t, axis=0)
-
-
-
-    # print("-------------------不同时间步上---------------------")
-    for i in range(0, all_real_od_t.shape[0], 8):
-        print("-----真实值------")
-        print(np.round(all_real_od_t[i, 60:68, 60:68].astype(np.float32)))  # 保留小数点后1位
-        print("-----预测值-----")
-        print(np.round(all_pred_od_t[i, 60:68, 60:68].astype(np.float32)))  # 保留小数点后1位
-
-    print("-------------------平均时间步上---------------------")
-    print(np.round(all_real_od[60:68, 60:68].astype(np.float32), 0).astype(int))  # 保留小数点后1位
-    print("----------------------------------------------------")
-    print(np.round(all_pred_od[60:68, 60:68].astype(np.float32), 0).astype(int))  # 保留小数点后1位
-
-    vmin = min(all_pred_od.min(), all_real_od.min())
-    vmax = max(all_pred_od.max(), all_real_od.max())
-    # print(f"real max:{all_real_od.max()}, real min:{all_real_od.min()}")
-    # print(f"pred max:{all_pred_od.max()}, pred min:{all_pred_od.min()}")
-    # print(f"Max: {vmax:.4f}, Min: {vmin:.4f}")
-    true_max = all_real_od_t.max()
-    pred_max = all_pred_od_t.max()
-    print(f"真实最大值{true_max},预测最大值，{pred_max}")
-
-
-
-    # plt.figure(figsize=(15, 7))
-    #
-    # # 绘制真实 OD 热力图
-    # plt.subplot(1, 2, 1)
-    # sns.heatmap(all_real_od, cmap="Blues", cbar=True,vmin=vmin, vmax=vmax)
-    # plt.title("Average True OD Matrix", fontsize=14)
-    # plt.xlabel("Destination Zones")
-    # plt.ylabel("Origin Zones")
-    #
-    # # 绘制预测 OD 热力图
-    # plt.subplot(1, 2, 2)
-    # sns.heatmap(all_pred_od, cmap="Blues", cbar=True,vmin=vmin, vmax=vmax)
-    # plt.title("Average Predicted OD Matrix", fontsize=14)
-    # plt.xlabel("Destination Zones")
-    # plt.ylabel("Origin Zones")
-    #
-    # # 调整布局并显示
-    # plt.tight_layout()
-    # # plt.show()
-    #
-    # plt.figure(figsize=(15, 7))
-    #
-    # # 绘制真实 OD 热力图
-    # plt.subplot(1, 2, 1)
-    # sns.heatmap(all_real_od[35:68, 35:68], cmap="Blues", cbar=True, vmin=vmin, vmax=vmax)
-    # plt.title("Average True OD Matrix", fontsize=14)
-    # plt.xlabel("Destination Zones")
-    # plt.ylabel("Origin Zones")
-    #
-    # # 绘制预测 OD 热力图
-    # plt.subplot(1, 2, 2)
-    # sns.heatmap(all_pred_od[35:68, 35:68], cmap="Blues", cbar=True, vmin=vmin, vmax=vmax)
-    # plt.title("Average Predicted OD Matrix", fontsize=14)
-    # plt.xlabel("Destination Zones")
-    # plt.ylabel("Origin Zones")
-    #
-    # # 调整布局并显示
-    # plt.tight_layout()
-    # # plt.show()
-
-    print(f"Test Loss: {test_loss:.4f}")
-    print(f"Test RMSE: {rmse_total:.4f} Test MAE: {mae_total:.4f} Test MAPE: {mape_total:.4f}")
 
     with open(log_filename, 'a') as log_file:
         log_file.write(
-            f"Lr = {lr},Test Loss: {test_loss:.4f} RMSE: {rmse_total:.4f} MAE: {mae_total:.4f} MAPE: {mape_total:.4f}\n")
-
+            f"Lr = {lr},Test Loss: {test_loss:.4f} RMSE: {rmse_total:.4f} MAE: {mae_total:.4f} MAPE: {mape_total:.4f} CPC:{cpc_total:.4f} JSD:{jsd_total:.4f}\n")
 
 
 # 主程序

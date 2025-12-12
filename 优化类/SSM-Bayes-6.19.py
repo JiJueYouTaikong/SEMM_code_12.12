@@ -189,11 +189,11 @@ flow = flow[-num_samples:].astype(np.float32)
 od = od[-num_samples:].astype(np.float32)
 
 # 参数
-num_epochs = 100  # 贝叶斯优化迭代次数
+num_epochs = 50  # 贝叶斯优化迭代次数
 tol = 0.05  # 收敛阈值
 init_matrix = np.load('../data/初始OD估计_NN_25.3.18.npy')
 
-print("6.20.1")
+print("6.20.2")
 
 # 结果记录
 rmse_total = 0
@@ -202,6 +202,10 @@ mape_total = 0
 loss_total = 0
 
 start_time = time.time()
+
+
+# 用于保存每个样本的最佳 OD 估计
+all_best_ods = []
 
 for i in range(num_samples):
     print(f"\nProcessing sample {i + 1}/{num_samples}",flush=True)
@@ -231,6 +235,10 @@ for i in range(num_samples):
     best_od = estimator.best_od
     best_loss = estimator.best_loss
 
+    # 保存预测
+    all_best_ods.append(best_od.astype(np.float32))  # 保证类型统一
+
+
     # 计算评估指标
     od_tensor = torch.tensor(od[i], dtype=torch.float32)
     pred_od_tensor = torch.tensor(best_od, dtype=torch.float32)
@@ -245,21 +253,10 @@ for i in range(num_samples):
     print(f"Sample {i} - Best Loss: {best_loss:.4f}",flush=True)
     print(f"RMSE: {rmse:.4f}, MAE: {mae:.4f}, MAPE: {mape:.4f}",flush=True)
 
-    # # 可视化结果
-    # if i % 1 == 0:  # 对每个样本都可视化
-    #     vmin = min(best_od.min(), od[i].min())
-    #     vmax = max(best_od.max(), od[i].max())
-    #
-    #     fig, axes = plt.subplots(1, 2, figsize=(10, 5))
-    #     im1 = axes[0].imshow(best_od, cmap='Blues', interpolation='nearest', vmin=vmin, vmax=vmax)
-    #     axes[0].set_title(f'Estimated OD (Sample {i + 1})')
-    #     fig.colorbar(im1, ax=axes[0])
-    #
-    #     im2 = axes[1].imshow(od[i], cmap='Blues', interpolation='nearest', vmin=vmin, vmax=vmax)
-    #     axes[1].set_title(f'True OD (Sample {i + 1})')
-    #     fig.colorbar(im2, ax=axes[1])
-    #
-    #     plt.show()
+# 拼接所有样本的预测 OD
+best_ods_array = np.stack(all_best_ods, axis=0)  # shape: [num_samples, N, N]
+np.save("../可视化/测试集TNN/Pred-SSM-BO.npy", best_ods_array)
+print("所有预测的OD矩阵已保存为Pred-SSM-BO.npy'", flush=True)
 
 # 计算平均评估指标
 rmse_test = rmse_total / num_samples

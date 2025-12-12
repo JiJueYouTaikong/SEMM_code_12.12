@@ -16,6 +16,8 @@ from utils.get_X_Freq import get_X_Freq
 import pywt
 import torch.nn.functional as F
 from utils_v1_4.utils import nb_zeroinflated_nll_loss
+import functools
+print = functools.partial(print, flush=True)
 
 # 数据准备
 def normalize_data(data):
@@ -187,88 +189,54 @@ class FFTMLP(nn.Module):
         return output
 
 # 定义模型
+# 新的 ODModel 结构，支持超参：层数、神经元数量、dropout 率
 class ODModel(nn.Module):
-    def __init__(self, N, temp, freq,dropout_rate=0.0):
+    def __init__(self, N, temp, freq, num_layers=3, hidden_units=128, dropout_rate=0.1):
         super(ODModel, self).__init__()
-
         self.N = N
         self.temp = temp
         self.freq = freq
 
-        n1 = 128
-        n2 = 64
-
         self.weights = nn.Parameter(torch.randn(N, 3))
 
-        # MLP for each parameter: n, p, pi
-        self.mlp_n = nn.Sequential(
-            nn.Linear(N, n1),
-            nn.ReLU(),
-            nn.Dropout(dropout_rate),
-            nn.Linear(n1, n2),
-            nn.ReLU(),
-            nn.Dropout(dropout_rate),
-            nn.Linear(n2, N * N)
-        )
+        def make_mlp():
+            layers = [nn.Linear(N, hidden_units), nn.ReLU(), nn.Dropout(dropout_rate)]
+            for _ in range(num_layers - 2):
+                layers += [nn.Linear(hidden_units, hidden_units), nn.ReLU(), nn.Dropout(dropout_rate)]
+            layers += [nn.Linear(hidden_units, N * N)]
+            return nn.Sequential(*layers)
 
-        self.mlp_p = nn.Sequential(
-            nn.Linear(N, n1),
-            nn.ReLU(),
-            nn.Dropout(dropout_rate),
-            nn.Linear(n1, n2),
-            nn.ReLU(),
-            nn.Dropout(dropout_rate),
-            nn.Linear(n2, N * N)
-        )
-
-        self.mlp_pi = nn.Sequential(
-            nn.Linear(N, n1),
-            nn.ReLU(),
-            nn.Dropout(dropout_rate),
-            nn.Linear(n1, n2),
-            nn.ReLU(),
-            nn.Dropout(dropout_rate),
-            nn.Linear(n2, N * N)
-        )
+        self.mlp_n = make_mlp()
+        self.mlp_p = make_mlp()
+        self.mlp_pi = make_mlp()
 
     def forward(self, x):
-        '''
-        :param x: 输入速度 [B, N]
-        :return: 负二项分布参数 n, p, pi --> [B, N, N]
-        '''
         B, N = x.shape
-
-        x_temp = np.tile(self.temp, (B, 1))  # [B,N]
-        x_freq = np.tile(self.freq, (B, 1))  # [B,N]
-
-        x_random = np.random.normal(loc=0.05, scale=0.01, size=(B, N)).astype(float)
-        x_random = np.clip(x_random, 0, 0.1)
-
-        x_temp_freq_rand = np.stack([x_temp, x_freq, x_random], axis=-1)  # [B,N,3]
-        tensor_delta_x = torch.tensor(x_temp_freq_rand, dtype=torch.float).to(x.device)
+        x_temp = np.tile(self.temp, (B, 1))
+        x_freq = np.tile(self.freq, (B, 1))
+        x_random = np.clip(np.random.normal(0.05, 0.01, size=(B, N)), 0, 0.1)
+        # print(f"x random shape:{x_random.shape}")
+        # print(x_random[0,:5])
+        # np.save("./data/x_random.npy", x_random)
+        x_temp_freq_rand = np.stack([x_temp, x_freq, x_random], axis=-1)
+        tensor_delta_x = torch.tensor(x_temp_freq_rand, dtype=torch.float, device=x.device)
 
         self.weights = self.weights.to(x.device)
-        weighted_sum = x + torch.sum(tensor_delta_x * self.weights.unsqueeze(0), dim=2)  # [B, N]
+        weighted_sum = x + torch.sum(tensor_delta_x * self.weights.unsqueeze(0), dim=2)
 
-        # 三个分支 MLP 分别生成 n, p, pi 参数
-        n_flat = self.mlp_n(weighted_sum)     # [B, N*N]
-        p_flat = self.mlp_p(weighted_sum)     # [B, N*N]
-        pi_flat = self.mlp_pi(weighted_sum)   # [B, N*N]
+        n_flat = self.mlp_n(weighted_sum)
+        p_flat = self.mlp_p(weighted_sum)
+        pi_flat = self.mlp_pi(weighted_sum)
 
-        # reshape 到 [B, N, N]
-        n = F.softplus(n_flat.view(B, N, N))  # 保证 n > 0
-        p = torch.sigmoid(p_flat.view(B, N, N))  # 保证 p ∈ (0,1)
-        pi = torch.sigmoid(pi_flat.view(B, N, N))  # 保证 pi ∈ (0,1)
-
+        n = F.softplus(n_flat.view(B, N, N))
+        p = torch.sigmoid(p_flat.view(B, N, N))
+        pi = torch.sigmoid(pi_flat.view(B, N, N))
         return n, p, pi
 
 
 
 # 训练过程
-def train_model(model, train_loader, val_loader, epochs=100, patience=10, learning_rate=0.001, load=0):
-    if load == 1:
-        model.load_state_dict(torch.load('ckpt/v1_4/best_model_feature4_25.1.14数据集版本.pth'))
-        print(f"best model loaded")
+def train_model(model, train_loader, val_loader, epochs=100, patience=10, learning_rate=0.001, is_mcm=None, freq_method=None,stop_type=None):
 
     device = torch.device("cuda:3" if torch.cuda.is_available() else "cpu")
     model.to(device)
@@ -331,13 +299,21 @@ def train_model(model, train_loader, val_loader, epochs=100, patience=10, learni
         if epoch % 5 == 0:
             print(f"Epoch [{epoch + 1}/{epochs}], Train NLL Loss: {train_loss:.4f}, Val NLL Loss: {val_loss:.4f}, Val Pred MAE: {val_mae:.4f} , Val RMSE: {val_rmse:.4f}")
 
+
+        if stop_type == 'rmse':
+            loss_value = val_rmse
+        elif stop_type == 'nll':
+            loss_value = val_loss
+        else:
+            return -1
+
         # 提前停止机制
-        if val_loss < best_val_loss:
-            best_val_loss = val_loss
+        if loss_value < best_val_loss:
+            best_val_loss = loss_value
 
             patience_counter = 0
             # 保存最佳模型
-            torch.save(model.state_dict(), "ckpt/v1_4/best_model_feature4_25.1.14数据集版本.pth")
+            torch.save(model.state_dict(), f"ckpt/v1_4/best_model_{freq_method}_is_mcm_{is_mcm}.pth")
             print(f"best saved at epoch{epoch + 1},best：{best_val_loss:.4f}")
         else:
             patience_counter += 1
@@ -487,8 +463,7 @@ def load_data(is_mcm=False,freq_shuffle=True,freq_method=None):
     if is_mcm:
         speed = np.load('data/Speed_完整批处理_3.17_Final_MCM_60.npy')
         od = np.load('data/OD_完整批处理_3.17_Final_MCM_60.npy')
-        # speed = np.load('data/Speed_完整批处理_3.17_Final_MCM_180_43.npy')
-        # od = np.load('data/OD_完整批处理_3.17_Final_MCM_180_43.npy')
+
 
         # 获取数据长度 T
         T, N = speed.shape
@@ -582,6 +557,9 @@ def load_data(is_mcm=False,freq_shuffle=True,freq_method=None):
     print("归一化后的验证集 shape:", val_data.shape, "OD形状", val_target.shape)
     print("归一化后的测试集 shape:", test_data.shape, "OD形状", test_target.shape)
 
+    print(test_data.shape)
+    print(test_data[0,:10])
+
     train_dataset = TensorDataset(train_data, train_target)
     val_dataset = TensorDataset(val_data, val_target)
     test_dataset = TensorDataset(test_data, test_target)
@@ -600,14 +578,17 @@ def load_data(is_mcm=False,freq_shuffle=True,freq_method=None):
     x_temp = np.squeeze(x_temp, axis=-1)
     x_freq = np.squeeze(x_freq, axis=-1)
 
+    # np.save('./data/temp.npy', x_temp)
+    # np.save('./data/freq.npy', x_freq)
+
     return train_loader, val_loader, test_loader, x_temp, x_freq,log_filename
 
 
 # 测试
-def test_model(model, test_loader, lr: float,log_name=None,patience=30):
+def test_model(model, test_loader, lr: float,log_name=None,patience=30, is_mcm=None, freq_method=None,stop_type=None):
     device = torch.device("cuda:3" if torch.cuda.is_available() else "cpu")
     model.to(device)
-    path = "ckpt/v1_4/best_model_feature4_25.1.14数据集版本.pth"
+    path = f"ckpt/v1_4/best_model_{freq_method}_is_mcm_{is_mcm}.pth"
 
     if os.path.exists(path):
         model.load_state_dict(torch.load(path))
@@ -682,42 +663,94 @@ def test_model(model, test_loader, lr: float,log_name=None,patience=30):
 
     print(f"Device:{device}")
     with open(log_name, 'a') as log_file:
-        log_file.write(f"Lr = {lr},patience = {patience},Test NLL Loss: {test_loss:.4f} RMSE: {rmse_total:.4f} MAE: {mae_total:.4f} MAPE: {mape_total:.4f} CPC: {cpc_total:.4f} JSD: {jsd_total:.4f}\n")
+        log_file.write(f"Patience={patience} Loss: {test_loss:.4f} 【RMSE】: 【{rmse_total:.4f}】 MAE: {mae_total:.4f} MAPE: {mape_total:.4f} CPC: {cpc_total:.4f} JSD: {jsd_total:.4f}\n")
 
+    # # 删除微调保存的最优模型权重
+    # path = f"ckpt/v1_4/best_model_{freq_method}_is_mcm_{is_mcm}.pth"
+    # if os.path.exists(path):
+    #     os.remove(path)
 
 # 主程序
+# 新 main 函数，支持多层嵌套超参搜索
+from itertools import product
+
 def main():
+    # is_mcm_list = [True, False]
+    # freq_methods = ['WT', 'STFT']
+    # stop_types = ['rmse', 'nll']
+    # num_layers_list = [2, 3, 4, 5, 6, 8, 10]
+    # hidden_units_list = [64, 128, 256, 512]
+    # dropout_list = [0.0, 0.1, 0.2]
+    # lr_list = [0.05,0.045,0.04,0.03, 0.025, 0.02, 0.015, 0.01, 0.005,
+    #            0.0045, 0.004, 0.0035, 0.003, 0.0025, 0.002, 0.0015, 0.001,
+    #            0.0005, 0.0004]
+    # patience = 20
+
+    # 最佳:WT
+    # is_mcm_list = [True]
+    # freq_methods = ['WT']
+    # stop_types = ['nll']
+    # num_layers_list = [8]
+    # hidden_units_list = [256]
+    # dropout_list = [0.0]
+    # lr_list = [0.0025]
+    # patience = 20
+
+    # # 最佳:STFT (弱于WT）
+    is_mcm_list = [True]
+    freq_methods = ['STFT']
+    stop_types = ['rmse']
+    num_layers_list = [3]
+    hidden_units_list = [512]
+    dropout_list = [0.0]
+    lr_list = [0.001]
+    patience = 20
 
 
+    for is_mcm, freq_method, stop_type in product(is_mcm_list, freq_methods, stop_types):
 
-    # 定义学习率列表
-    # lr_list = [0.1, 0.05, 0.04, 0.03, 0.02, 0.01, 0.005,
-    #            0.004,  0.003, 0.002, 0.001,
-    #            0.0005, 0.0004, 0.0003, 0.0002, 0.0001]
-    lr_list = [0.1, 0.05, 0.045, 0.04, 0.035, 0.03, 0.025, 0.02, 0.015, 0.01, 0.005,
-               0.0045, 0.004, 0.0035, 0.003, 0.0025, 0.002, 0.0015, 0.001,
-               0.0005, 0.0002, 0.0001]
-    # lr_list = [0.025]  # WT MCM best patience20
-    lr_list = [0.003]  # STFT not MCM not shuffle best   30
-    patience = 30
-    # lr_list = [0.003]
-    # lr_list = [0.025]
 
-    # 遍历学习率列表
-    for lr in lr_list:
-        print(f"当前学习率: {lr}")
+        for num_layers, hidden_units, dropout_rate in product(num_layers_list, hidden_units_list, dropout_list):
+            for lr in lr_list:
+                torch.cuda.empty_cache()
 
-        torch.cuda.empty_cache()
+                train_loader, val_loader, test_loader, temp, freq, log_filename = load_data(
+                    is_mcm=is_mcm, freq_shuffle=False, freq_method=freq_method)
 
-        train_loader, val_loader, test_loader, temp, freq, log_filename = load_data(is_mcm=False,freq_shuffle=False,freq_method='STFT')
+                param = f"MCM={is_mcm}, Method={freq_method}, Stop={stop_type}, Layers={num_layers}, Hidden={hidden_units}, Dropout={dropout_rate}, LR={lr}"
+                print(param)
 
-        model = ODModel(N=110, temp=temp, freq=freq,dropout_rate=0.0)  # N为区域数
+                model = ODModel(
+                    N=110,
+                    temp=temp,
+                    freq=freq,
+                    num_layers=num_layers,
+                    hidden_units=hidden_units,
+                    dropout_rate=dropout_rate
+                )
 
-        # 训练模型
-        train_model(model, train_loader, val_loader, epochs=1000, patience=patience, learning_rate=lr, load=0)
+                train_model(
+                    model, train_loader, val_loader,
+                    epochs=2000, patience=patience,
+                    learning_rate=lr,
+                    is_mcm=is_mcm,
+                    freq_method=freq_method,
+                    stop_type=stop_type
+                )
 
-        # 测试模型
-        test_model(model, test_loader, lr=lr,log_name=log_filename,patience=patience)
+                with open(log_filename, 'a') as log_file:
+                    log_file.write(f"\t \t (Param: {param})\n")
+
+
+                test_model(
+                    model, test_loader,
+                    lr=lr,
+                    log_name=log_filename,
+                    patience=patience,
+                    is_mcm=is_mcm,
+                    freq_method=freq_method,
+                    stop_type=stop_type
+                )
 
 
 if __name__ == "__main__":

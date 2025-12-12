@@ -128,7 +128,7 @@ od = od[-num_samples:].astype(np.float32)
 
 # 500 20   [2000 5]
 
-num_epochs = 100
+num_epochs = 10
 tol = 0.01  # 收敛阈值
 
 rmse_total = 0
@@ -140,6 +140,10 @@ learning_rate = 40
 init_matrix = np.load('data/初始OD估计_NN_25.3.18.npy')
 
 start_time = time.time()
+
+# 初始化列表收集每个时间步预测结果
+t_pred_list = []
+
 
 for i in range(num_samples):
     # 对每一组样本随机初始化估计的 OD 矩阵
@@ -176,6 +180,10 @@ for i in range(num_samples):
     # 记录损失和评估指标
     loss_total += loss.item()
     pred_od = model.ode.detach()
+
+    # 存储当前预测结果
+    t_pred_list.append(pred_od.cpu().numpy())  # 转为 numpy
+
     print(f"最终ODE:{model.ode.sum():.2f}")
     print(f"真实OD:{od[i].sum():.2f}")
 
@@ -186,25 +194,9 @@ for i in range(num_samples):
     mae_total += mae
     mape_total += mape
 
-    # if i % 4 == 0:
-    #     # 找出真实值和预测值中的最大值和最小值
-    #     vmin = min(pred_od.min().item(), od_tensor.min().item())
-    #     vmax = max(pred_od.max().item(), od_tensor.max().item())
-    #
-    #     # 绘制热力图
-    #     fig, axes = plt.subplots(1, 2, figsize=(10, 5))
-    #
-    #     # 绘制最终 OD 估计矩阵热力图
-    #     im1 = axes[0].imshow(pred_od.numpy(), cmap='Blues', interpolation='nearest', vmin=0, vmax=vmax)
-    #     axes[0].set_title(f'Final Estimated OD Matrix by DUE_G (Sample {i + 1})')
-    #     fig.colorbar(im1, ax=axes[0])
-    #
-    #     # 绘制真实 OD 矩阵热力图
-    #     im2 = axes[1].imshow(od_tensor.numpy(), cmap='Blues', interpolation='nearest', vmin=0, vmax=vmax)
-    #     axes[1].set_title(f'True OD Matrix (Sample {i + 1})')
-    #     fig.colorbar(im2, ax=axes[1])
-    #
-    #     plt.show()
+# 拼接结果并保存
+t_pred_array = np.stack(t_pred_list, axis=0).astype(np.float32)  # [num_samples, N, N]
+np.save("../可视化/测试集TNN/Pred-DUE-GB.npy", t_pred_array)
 
 # 计算平均评估指标
 rmse_test = rmse_total / num_samples

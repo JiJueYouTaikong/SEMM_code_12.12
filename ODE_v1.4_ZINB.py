@@ -332,8 +332,9 @@ def train_model(model, train_loader, val_loader, epochs=100, patience=10, learni
             print(f"Epoch [{epoch + 1}/{epochs}], Train NLL Loss: {train_loss:.4f}, Val NLL Loss: {val_loss:.4f}, Val Pred MAE: {val_mae:.4f} , Val RMSE: {val_rmse:.4f}")
 
         # 提前停止机制
-        if val_rmse < best_val_loss:
-            best_val_loss = val_rmse
+        if val_loss < best_val_loss:
+            best_val_loss = val_loss
+
             patience_counter = 0
             # 保存最佳模型
             torch.save(model.state_dict(), "ckpt/v1_4/best_model_feature4_25.1.14数据集版本.pth")
@@ -348,7 +349,69 @@ def train_model(model, train_loader, val_loader, epochs=100, patience=10, learni
 
     return best_val_loss
 
+
+def evaluate_metrics(predictions, targets):
+    '''
+    单个方法的五项指标计算：RMSE, MAE, MAPE, CPC, JSD
+    '''
+    predictions = torch.tensor(predictions, dtype=torch.float32)
+    targets = torch.tensor(targets, dtype=torch.float32)
+
+    mse = torch.mean((predictions - targets) ** 2)
+    rmse = torch.sqrt(mse)
+    mae = torch.mean(torch.abs(predictions - targets))
+
+    # MAPE
+    non_zero_mask = targets != 0
+    if non_zero_mask.sum() > 0:
+        mape = torch.mean(
+            torch.abs((predictions[non_zero_mask] - targets[non_zero_mask]) / targets[non_zero_mask]))
+    else:
+        mape = torch.tensor(0.0)
+
+    # Flatten
+    pred_flat = predictions.reshape(predictions.shape[0], -1)
+    targ_flat = targets.reshape(targets.shape[0], -1)
+
+    # CPC
+    cpc_list = []
+    for t in range(pred_flat.shape[0]):
+        pred_t = pred_flat[t]
+        targ_t = targ_flat[t]
+        numerator = 2 * torch.sum(torch.minimum(pred_t, targ_t))
+        denominator = torch.sum(pred_t) + torch.sum(targ_t)
+        if denominator > 0:
+            cpc_list.append((numerator / denominator).item())
+        else:
+            cpc_list.append(1.0)
+    cpc = sum(cpc_list) / len(cpc_list)
+
+    # JSD
+    jsd_list = []
+    for t in range(pred_flat.shape[0]):
+        pred_t = pred_flat[t]
+        targ_t = targ_flat[t]
+
+        epsilon = 1e-8
+        pred_dist = (pred_t + epsilon) / (torch.sum(pred_t) + epsilon * pred_t.numel())
+        targ_dist = (targ_t + epsilon) / (torch.sum(targ_t) + epsilon * targ_t.numel())
+
+        m = 0.5 * (pred_dist + targ_dist)
+        kl1 = torch.sum(pred_dist * torch.log(pred_dist / m))
+        kl2 = torch.sum(targ_dist * torch.log(targ_dist / m))
+        jsd_t = 0.5 * (kl1 + kl2)
+        jsd_list.append(jsd_t.item())
+    jsd = sum(jsd_list) / len(jsd_list)
+
+    return rmse.item(), mae.item(), mape.item(), cpc, jsd
+
 def calculate_rmse_mae(predictions, targets):
+    '''
+
+    :param predictions: [T,N,N] T个时间步上的OD矩阵预测值
+    :param targets:  [T,N,N] T个时间步上的OD矩阵真值
+    :return:
+    '''
     mse = torch.mean((predictions - targets) ** 2)
     rmse = torch.sqrt(mse)
     mae = torch.mean(torch.abs(predictions - targets))
@@ -360,7 +423,52 @@ def calculate_rmse_mae(predictions, targets):
             torch.abs((predictions[non_zero_mask] - targets[non_zero_mask]) / targets[non_zero_mask]))
     else:
         mape = torch.tensor(0.0)
-    return rmse.item(), mae.item(), mape.item()
+
+    # Flatten
+    pred_flat = predictions.reshape(predictions.shape[0], -1)
+    targ_flat = targets.reshape(targets.shape[0], -1)
+
+    # CPC
+    cpc_list = []
+    for t in range(pred_flat.shape[0]):
+        pred_t = pred_flat[t]
+        targ_t = targ_flat[t]
+        numerator = 2 * torch.sum(torch.minimum(pred_t, targ_t))
+        denominator = torch.sum(pred_t) + torch.sum(targ_t)
+        if denominator > 0:
+            cpc_list.append((numerator / denominator).item())
+        else:
+            cpc_list.append(1.0)
+    cpc = sum(cpc_list) / len(cpc_list)
+
+    # JSD
+    jsd_list = []
+    min_val = 1e-8  # 安全裁剪阈值
+
+    for t in range(pred_flat.shape[0]):
+        pred_t = pred_flat[t]
+        targ_t = targ_flat[t]
+
+        # 构造分布
+        pred_dist = (pred_t + min_val) / (torch.sum(pred_t) + min_val * pred_t.numel())
+        targ_dist = (targ_t + min_val) / (torch.sum(targ_t) + min_val * targ_t.numel())
+
+        # 强制裁剪，防止log(0)
+        pred_dist = torch.clamp(pred_dist, min=min_val)
+        targ_dist = torch.clamp(targ_dist, min=min_val)
+        m = 0.5 * (pred_dist + targ_dist)
+        m = torch.clamp(m, min=min_val)
+
+        kl1 = torch.sum(pred_dist * torch.log(pred_dist / m))
+        kl2 = torch.sum(targ_dist * torch.log(targ_dist / m))
+        jsd_t = 0.5 * (kl1 + kl2)
+
+        if not torch.isnan(jsd_t):
+            jsd_list.append(jsd_t.item())
+    jsd = sum(jsd_list) / len(jsd_list) if jsd_list else 0.0
+
+
+    return rmse.item(), mae.item(), mape.item(),cpc,jsd
 
 
 def set_seed(seed):
@@ -512,6 +620,8 @@ def test_model(model, test_loader, lr: float,log_name=None,patience=30):
     rmse_total = 0
     mae_total = 0
     mape_total = 0
+    cpc_total = 0
+    jsd_total = 0
     criterion = nn.MSELoss()
     N = 110
 
@@ -541,24 +651,27 @@ def test_model(model, test_loader, lr: float,log_name=None,patience=30):
             mean_pred = torch.tensor(mean_pred, dtype=torch.float32).to(device)
 
             # 计算 RMSE 和 MAE
-            rmse, mae, mape = calculate_rmse_mae(mean_pred * mask, targets)
+            rmse, mae, mape,cpc,jsd = calculate_rmse_mae(mean_pred * mask, targets)
             rmse_total += rmse
             mae_total += mae
             mape_total += mape
+            cpc_total += cpc
+            jsd_total += jsd
 
             all_real_od.append(targets.cpu().numpy())
-            all_pred_od.append(mean_pred.cpu().numpy())
+            all_pred_od.append(mean_pred.cpu() * mask.cpu().numpy())
 
+    print(f"测试集len={len(test_loader)}")
     test_loss /= len(test_loader)
     rmse_total /= len(test_loader)
     mae_total /= len(test_loader)
     mape_total /= len(test_loader)
+    cpc_total /= len(test_loader)
+    jsd_total /= len(test_loader)
 
     print(f"Test NLL Loss: {test_loss:.4f}")
-    print(f"Test RMSE: {rmse_total:.4f} Test MAE: {mae_total:.4f} Test MAPE: {mape_total:.4f}")
+    print(f"Test RMSE: {rmse_total:.4f}  MAE: {mae_total:.4f} MAPE: {mape_total:.4f} CPC: {cpc_total:.4f} JSD: {jsd_total:.4f}")
 
-    torch.save(model.state_dict(),
-               f"ckpt/v1_4/best_model_feature4_25.1.14数据集版本_{test_loss:.4f}_{rmse_total:.4f}_{mae_total:.4f}_lr_{lr}.pth")
 
     # 计算平均的OD矩阵
     # 设置不使用科学计数法
@@ -566,23 +679,10 @@ def test_model(model, test_loader, lr: float,log_name=None,patience=30):
     all_real_od_t = np.concatenate(all_real_od, axis=0)
     all_pred_od_t = np.concatenate(all_pred_od, axis=0)
 
-    np.save("./可视化/测试集TNN/Pred_ours_ZINB.npy", all_pred_od_t)
-    all_real_od = np.mean(all_real_od_t, axis=0)
-    all_pred_od = np.mean(all_pred_od_t, axis=0)
 
-
-    vmin = min(all_pred_od.min(), all_real_od.min())
-    vmax = max(all_pred_od.max(), all_real_od.max())
-
-    true_max = all_real_od_t.max()
-    pred_max = all_pred_od_t.max()
-    print(f"真实最大值{true_max},预测最大值，{pred_max}")
-
-    print(f"Test Loss: {test_loss:.4f}")
-    print(f"Test RMSE: {rmse_total:.4f} Test MAE: {mae_total:.4f} Test MAPE: {mape_total:.4f}")
     print(f"Device:{device}")
     with open(log_name, 'a') as log_file:
-        log_file.write(f"Lr = {lr},patience = {patience},Test NLL Loss: {test_loss:.4f} RMSE: {rmse_total:.4f} MAE: {mae_total:.4f} MAPE: {mape_total:.4f}\n")
+        log_file.write(f"Lr = {lr},patience = {patience},Test NLL Loss: {test_loss:.4f} RMSE: {rmse_total:.4f} MAE: {mae_total:.4f} MAPE: {mape_total:.4f} CPC: {cpc_total:.4f} JSD: {jsd_total:.4f}\n")
 
 
 # 主程序
@@ -597,11 +697,9 @@ def main():
     lr_list = [0.1, 0.05, 0.045, 0.04, 0.035, 0.03, 0.025, 0.02, 0.015, 0.01, 0.005,
                0.0045, 0.004, 0.0035, 0.003, 0.0025, 0.002, 0.0015, 0.001,
                0.0005, 0.0002, 0.0001]
-    # lr_list = [0.03]  # 20 0.03
-    # lr_list = [0.0035]  # WT MCM best patience20
-    # lr_list =[0.02] # STFT MCM not shuffle best
-    # lr_list = [0.03]  # STFT not MCM not shuffle best
-    patience = 20
+    # lr_list = [0.025]  # WT MCM best patience20
+    lr_list = [0.003]  # STFT not MCM not shuffle best   30
+    patience = 30
     # lr_list = [0.003]
     # lr_list = [0.025]
 
@@ -611,7 +709,7 @@ def main():
 
         torch.cuda.empty_cache()
 
-        train_loader, val_loader, test_loader, temp, freq, log_filename = load_data(is_mcm=True,freq_shuffle=False,freq_method='WT')
+        train_loader, val_loader, test_loader, temp, freq, log_filename = load_data(is_mcm=False,freq_shuffle=False,freq_method='STFT')
 
         model = ODModel(N=110, temp=temp, freq=freq,dropout_rate=0.0)  # N为区域数
 

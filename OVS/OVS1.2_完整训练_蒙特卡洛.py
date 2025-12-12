@@ -466,6 +466,8 @@ def train_model(model, train_loader, val_loader, test_loader, epochs, patience, 
     all_pred_od = np.mean(all_pred_od_t, axis=0)
     print(f"时间步平均后的OD预测：{all_real_od.shape}")
 
+    all_pred = all_pred_od_t.reshape(all_real_od_t.shape[0], 110, -1)
+    np.save("../可视化/测试集TNN/Pred-OVS-MCM.npy", all_pred)
     # g_reconstructed = model.tod_generator(z_test)
     # print("Reconstructed TOD shape:", g_reconstructed.shape)
 

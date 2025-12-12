@@ -429,10 +429,7 @@ def train_model(model, train_loader, val_loader, test_loader,epochs, patience, l
             # 计算 RMSE 和 MAE
             rmse1, mae1, mape1 = calculate_rmse_mae(od_pred, od_test)
             rmse2, mae2, mape2 = calculate_rmse_mae(speed_pred, speed_test)
-            # print(f"batch内的OD预测和标签：\n{od_pred[:3,:6]}\n{od_test[:3,:6]}")
-            # print(f"batch内的OD预测和标签及误差：\n{od_pred[:3, :6]}\n{od_test[:3, :6]},{loss}")
 
-            # print(f"batch的Loss,RMSE和MAE:{loss:.4f},{rmse:.4f},{mae:.4f}")
             rmse_total += rmse1
             mae_total += mae1
             mape_total += mape1
@@ -471,9 +468,12 @@ def train_model(model, train_loader, val_loader, test_loader,epochs, patience, l
     all_real_od_t = np.concatenate(all_real_od, axis=0)
     all_pred_od_t = np.concatenate(all_pred_od, axis=0)
     print(f"所有时间步的OD预测：{all_real_od_t.shape}")
-    all_real_od = np.mean(all_real_od_t, axis=0)
-    all_pred_od = np.mean(all_pred_od_t, axis=0)
-    print(f"时间步平均后的OD预测：{all_real_od.shape}")
+
+    all_pred = all_pred_od_t.reshape(all_real_od_t.shape[0], 110,-1)
+    np.save("../可视化/测试集TNN/Pred-OVS.npy", all_pred)
+    # all_real_od = np.mean(all_real_od_t, axis=0)
+    # all_pred_od = np.mean(all_pred_od_t, axis=0)
+    # print(f"时间步平均后的OD预测：{all_real_od.shape}")
 
     # g_reconstructed = model.tod_generator(z_test)
     # print("Reconstructed TOD shape:", g_reconstructed.shape)

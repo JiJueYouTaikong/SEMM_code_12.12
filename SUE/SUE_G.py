@@ -218,7 +218,7 @@ for i in range(num_samples):
     pred_od = model.ode.detach()
 
     # 将当前预测的OD矩阵添加到列表中
-    all_predicted_ods.append(pred_od.numpy())
+    all_predicted_ods.append(pred_od.cpu().numpy())
 
     print(f"最终ODE:{model.ode.sum():.2f}",flush=True)
     print(f"真实OD:{od[i].sum():.2f}",flush=True)
@@ -231,26 +231,6 @@ for i in range(num_samples):
     mae_total += mae
     mape_total += mape
 
-    # if i % 10 == 0:
-    #
-    #     # 找出真实值和预测值中的最大值和最小值
-    #     vmin = min(pred_od.min().item(), od_tensor.min().item())
-    #     vmax = max(pred_od.max().item(), od_tensor.max().item())
-    #
-    #     # 绘制热力图
-    #     fig, axes = plt.subplots(1, 2, figsize=(10, 5))
-    #
-    #     # 绘制最终 OD 估计矩阵热力图
-    #     im1 = axes[0].imshow(pred_od.numpy(), cmap='Blues', interpolation='nearest', vmin=vmin, vmax=vmax)
-    #     axes[0].set_title(f'Final Estimated OD Matrix (Sample {i + 1})')
-    #     fig.colorbar(im1, ax=axes[0])
-    #
-    #     # 绘制真实 OD 矩阵热力图
-    #     im2 = axes[1].imshow(od_tensor.numpy(), cmap='Blues', interpolation='nearest', vmin=vmin, vmax=vmax)
-    #     axes[1].set_title(f'True OD Matrix (Sample {i + 1})')
-    #     fig.colorbar(im2, ax=axes[1])
-    #
-    #     plt.show()
 
 # 计算平均评估指标
 rmse_test = rmse_total / num_samples
@@ -258,9 +238,10 @@ mae_test = mae_total / num_samples
 mape_test = mape_total / num_samples
 loss_test = loss_total / num_samples
 
-# 保存所有预测的OD矩阵到一个npy文件
-# np.save('../可视化/测试集TNN/Pred_SSM.npy', np.array(all_predicted_ods))
-# print(f"所有预测的OD矩阵已保存",flush=True)
+# 保存预测OD矩阵
+all_predicted_ods_np = np.stack(all_predicted_ods, axis=0).astype(np.float32)  # shape: [num_samples, N, N]
+np.save('../可视化/测试集TNN/Pred-SUE-GB.npy', all_predicted_ods_np)
+print(f"所有预测的OD矩阵已保存至Pred-SUE-GB", flush=True)
 
 print(f"Total Test loss: {loss_test:.4f}, RMSE: {rmse_test:.4f}, MAE: {mae_test:.4f}, MAPE: {mape_test:.4f}",flush=True)
 

@@ -145,6 +145,9 @@ mape_total = 0
 
 start_time = time.time()
 
+# 初始化列表收集每个时间步预测结果
+t_pred_list = []
+
 cutoff = 3  # 设置简单路径搜索的截断值
 
 A = get_allocation_matrix(od_matrix[0], adj_matrix, dist_matrix, cutoff)
@@ -159,7 +162,7 @@ for i in range(num_samples):
     flow_i = convert_matrix(flow[i], adj_matrix)
 
     t = least_squares_solve(flow_i, A, N)
-
+    t_pred_list.append(t)
 
     rmse, mae, mape = calculate_rmse_mae(t, od_matrix[i])
     print(f"样本{i}的RMSE:{rmse:.4f} MAE:{mae:.4f} MAPE:{mape:.4f}")
@@ -167,7 +170,9 @@ for i in range(num_samples):
     mae_total += mae
     mape_total += mape
 
-
+# 拼接为 [num_samples, N, N] 的 numpy 数组并保存
+t_pred_array = np.stack(t_pred_list, axis=0).astype(np.float32)
+np.save("../可视化/测试集TNN/Pred-SUE-LS.npy", t_pred_array)
 # 计算平均评估指标
 rmse_test = rmse_total / num_samples
 mae_test = mae_total / num_samples

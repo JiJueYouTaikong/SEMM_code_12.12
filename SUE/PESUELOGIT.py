@@ -210,6 +210,11 @@ total_rmse = 0
 total_mae = 0
 total_mape = 0
 
+
+# 保存预测OD向量列表
+all_q_hat_list = []
+
+
 for i in range(num_samples):
     # 创建模型
     model = TrafficModel(num_links, num_paths, num_od_pairs, D, M, q_his)
@@ -230,6 +235,11 @@ for i in range(num_samples):
         optimizer.step()
         print(f"样本{i}, epoch{j}, Loss: {loss.item():.4f}")
 
+    # 打印与评估
+    pred_q_hat = model.q_hat.detach().cpu().numpy()
+    all_q_hat_list.append(pred_q_hat)  # 收集当前预测OD向量
+
+
     print(f"样本{i}的真实OD Sum",int(sum(q_obs[i])))
     print(f"样本{i}的估计OD Sum",int(sum(model.q_hat)))
 
@@ -238,10 +248,19 @@ for i in range(num_samples):
     total_rmse += rmse
     total_mae += mae
     total_mape += mape
+
+
+# 保存所有样本预测的 q_hat
+q_hat_array = np.stack(all_q_hat_list, axis=0).astype(np.float32)  # shape: [num_samples, num_od_pairs]
+np.save('../可视化/测试集TNN/Pred-PESL.npy', q_hat_array)
+print("所有预测的q_hat已保存为Pred-PESL")
+
 total_rmse = total_rmse / num_samples
 total_mae = total_mae / num_samples
 total_mape = total_mape / num_samples
+
 print(f"最终RMSE:{total_rmse:.4f} MAE:{total_mae:.4f} MAPE:{total_mape:.4f}")
+
 with open(log_filename, 'a') as log_file:
     log_file.write(
         f"Lr={lrate},Iter={max_iter},Samples={num_samples} Final RMSE: {total_rmse:.4f} MAE: {total_mae:.4f} MAPE: {total_mape:.4f}\n")
