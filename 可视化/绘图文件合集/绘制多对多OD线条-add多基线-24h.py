@@ -13,11 +13,7 @@ from matplotlib.path import Path
 from matplotlib.patches import PathPatch
 from datetime import datetime
 
-# 获取当前时间
-now = datetime.now()
 
-# 按所需格式转换为字符串
-formatted_time = now.strftime("%Y-%m-%d-%H-%M-%S")
 # ---------- 参数配置 ----------
 grid_csv = "../地图/1.1km网格.csv"
 v1_file = "../地图/网格映射v1.npy"
@@ -30,9 +26,9 @@ KEEP_LAST_TIME_STEPS = 24
 od_sources = {
     "SUE-GB": "../测试集TNN/Pred-SUE-GB.npy",  # 请替换为实际文件路径
     "SSM": "../测试集TNN/Pred_SSM_SUE_MSA_6.15_7.80.npy",  # 请替换为实际文件路径
-    "GPT2": "../测试集TNN/Pred_GPT2.npy",  # 请替换为实际文件路径
+    "GPT2": "../测试集TNN/Pred_RED-5.7127.npy",  # 请替换为实际文件路径
     "DeepGravity": "../测试集TNN/Pred_DG_false.npy",  # 请替换为实际文件路径
-    "Ours": "../测试集TNN/Pred_RED-5.7127.npy",
+    "Ours": "../测试集TNN/Pred_GPT2.npy",
     "Ground Truth": "../测试集TNN/真实值.npy"
 }
 
@@ -50,33 +46,38 @@ colors = ['#5e62a9','#fdffb6','#93002e']
 colors = ['#190aed','#dd1c2f','#fffc52']
 
 
+## 40 /  25
+
+# nums = [5,40]
+nums = [5,25]
+
 
 # 颜色配置（按绘制顺序：浅色、中间色、红色）
 COLOR_CONFIG = {
-    "light": {
-        "range": (1, 5),
+    "low": {
+        "range": (0, nums[0]),
         "color": colors[0],
         "linewidth": 1,
-        "alpha": 0.6,  # 降低基础透明度，避免叠加后过亮
+        "alpha": 0.4,  # 降低基础透明度，避免叠加后过亮
         "zorder": 10
     },
     "middle": {
-        "range": (5, 50),
+        "range": (nums[0], nums[1]),
         "color": colors[1],
-        "linewidth": 1.2,
-        "alpha": 0.6,
+        "linewidth": 1,
+        "alpha": 0.4,
         "zorder": 11
     },
-    "red": {
-        "range": (50, np.inf),
+    "high": {
+        "range": (nums[1], np.inf),
         "color": colors[2],
-        "linewidth": 1.3,
-        "alpha": 0.6,
+        "linewidth": 1.1,
+        "alpha": 0.4,
         "zorder": 12
     }
 }
 # 绘制顺序：先浅色，再中间色，最后红色
-DRAW_ORDER = ["light", "middle", "red"]
+DRAW_ORDER = ["low", "middle", "high"]
 
 # ---------- 加载数据 ----------
 # 1. 网格数据
@@ -207,9 +208,9 @@ def plot_od_subplot(ax, od_data, label):
 
     # 3. 分类收集所有保留时间步的OD弧线数据（按颜色类型）
     arc_data = {
-        "light": [],
+        "low": [],
         "middle": [],
-        "red": []
+        "high": []
     }
 
     # 获取保留的时间步数量
@@ -245,12 +246,12 @@ def plot_od_subplot(ax, od_data, label):
                     continue
 
                 # 确定颜色类型
-                if od_value <= COLOR_CONFIG["light"]["range"][1]:
-                    color_type = "light"
+                if od_value <= COLOR_CONFIG["low"]["range"][1]:
+                    color_type = "low"
                 elif od_value <= COLOR_CONFIG["middle"]["range"][1]:
                     color_type = "middle"
                 else:
-                    color_type = "red"
+                    color_type = "high"
 
                 # 生成弧线坐标
                 dest_center = grid_centers[dest_idx]
@@ -297,9 +298,17 @@ def plot_od_grid():
     for i in range(len(od_sources), len(axes)):
         axes[i].axis('off')
 
+
+    # 获取当前时间
+    now = datetime.now()
+
+    # 按所需格式转换为字符串
+    formatted_time = now.strftime("%m-%d-%H-%M")
+
+
     # 4. 调整布局并保存
     plt.tight_layout()
-    output_file = f"Fig_OD_line_in_map_v3_{formatted_time}.png"
+    output_file = f"Fig_OD_line_in_map_v3_than{nums[1]}_{formatted_time}.png"
     plt.savefig(output_file, format='png', bbox_inches='tight', pad_inches=0.1)
     # 可选：保存为PDF
     # plt.savefig(f"od_last_{KEEP_LAST_TIME_STEPS}_time_steps.pdf", format='pdf', bbox_inches='tight', pad_inches=0.1)
